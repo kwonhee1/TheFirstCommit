@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: demo
+
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: jdbc:mysql://${DB_URL}/${DB_TABLE}
+    username: ${DB_ID}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
