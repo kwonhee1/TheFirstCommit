@@ -39,3 +39,16 @@ social:
 jwt:
   access-token-time: 9999999  #3600 # 60 * 60 1시간
   refresh-token-time: 9999999  #604800 # 60 * 60 * 24 * 7 1주일
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+  info:
+    title: "TheFirstCommit 프로젝트 API 명세서"
+    description: "가족 기반 소셜 서비스 프로젝트의 API 문서입니다."
+    version: "v1.0.0"
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
