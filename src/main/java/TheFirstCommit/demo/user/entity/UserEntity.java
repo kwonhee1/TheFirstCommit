@@ -3,6 +3,8 @@ package TheFirstCommit.demo.user.entity;
 import TheFirstCommit.demo.CustomEntity;
 import TheFirstCommit.demo.family.FamilyEntity;
 import TheFirstCommit.demo.img.ImgEntity;
+import TheFirstCommit.demo.user.dto.RequestUpdateUserInfoDto;
+import TheFirstCommit.demo.user.dto.UpdateUserFamilyDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,8 +24,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "user")
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity extends CustomEntity {
 
@@ -64,9 +64,43 @@ public class UserEntity extends CustomEntity {
     @JoinColumn(name = "img_id", nullable = true)
     private ImgEntity img;
 
-    // update user info
-    public void updateName(String newName) {this.name = newName;}
-    public void updateRelation(String newRelation) {this.relation = newRelation;}
-    public void updateFamily(FamilyEntity newFamily) {this.family = newFamily; this.role=UserRole.USER; }
-    public void updateIsLeader(boolean isLeader) {this.isLeader = isLeader;}
+    public void update(RequestUpdateUserInfoDto dto) {
+        if(dto.getBirth() != null && !dto.getBirth().isEmpty())
+            this.birth = dto.getBirth();
+        if(dto.getName() != null && !dto.getName().isEmpty())
+            this.name = dto.getName();
+        if(dto.getRelation() != null && !dto.getRelation().isEmpty())
+            this.relation = dto.getRelation();
+        if(dto.getNumber() != null && !dto.getNumber().isEmpty())
+            this.number = dto.getNumber();
+    }
+
+    public void update(ImgEntity img) { this.img = img; }
+    public void update(UpdateUserFamilyDto dto) { this.family = dto.getFamily(); this.isLeader = dto.isLeader(); this.relation=dto.getRelation(); this.role = UserRole.USER; }
+
+//    public boolean validate() {
+//        if( //이름/프로필사진/생년월일/전화번호/받는 분과의 관계
+//            name != null && !name.isEmpty() &&
+//            img != null &&
+//            number != null && !number.isEmpty() &&
+//            birth != null && !birth.isEmpty() &&
+//            relation != null && !relation.isEmpty())
+//                return true;
+//        return false;
+//    }
+
+    @Builder
+    public UserEntity(long id, String name, String number, String birth, String provider,
+        String socialId, FamilyEntity family, String relation,
+        ImgEntity img) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.birth = birth;
+        this.provider = provider;
+        this.socialId = socialId;
+        this.family = family;
+        this.relation = relation;
+        this.img = img;
+    }
 }

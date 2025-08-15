@@ -14,6 +14,11 @@ public class TestController {
         return ResponseEntity.ok("Hello World");
     }
 
+    @GetMapping("/social/test")
+    public ResponseEntity testSocial() {
+        return ResponseEntity.ok("Hello World");
+    }
+
     @GetMapping("/public/test")
     public ResponseEntity publicTest() {
         return ResponseEntity.ok("Hello World");

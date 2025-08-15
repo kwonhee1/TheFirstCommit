@@ -58,6 +58,11 @@ public class AccessTokenFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user.get(), null, user.get().getRole().getAuthorities()));
 
+        StringBuilder str = new StringBuilder();
+        str.append("access token success " + userId +", " + user.get().getName());
+        user.get().getRole().getAuthorities().forEach(authority -> str.append(", " + authority.getAuthority()));
+        log.info(str.toString());
+
         filterChain.doFilter(request, response);
     }
 

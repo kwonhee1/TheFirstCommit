@@ -30,18 +30,17 @@ public class NaverService {
     public UserEntity socialLoin(String code) {
         Map<String, String> info = getUserFromNaver(code);
 
-        return userService.register(
-            RegisterDto
-                .builder()
-                .provider("naver")
-                .socialId(info.get("id"))
-                //.email(info.get("email"))
-                .name(info.get("name"))
-                .number(info.get("mobile"))
-                // .birth()
-                //.nickName(info.get("nickname"))
-                .imgURL(info.get("profile_image"))
-                .build()
+        return userService.login(info.get("id"), RegisterDto
+            .builder()
+            .provider("naver")
+            .socialId(info.get("id"))
+            //.email(info.get("email"))
+            .name(info.get("name"))
+            .number(info.get("mobile"))
+            // .birth()
+            //.nickName(info.get("nickname"))
+            .imgURL(info.get("profile_image"))
+            .build()
         );
     }
 

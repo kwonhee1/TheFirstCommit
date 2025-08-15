@@ -55,6 +55,7 @@ public class SocialController {
             case "google":
                 authorizationUri = googleAuthorizationUri;
                 clientId = googleClientId;
+                scope = "&scope=openid";
                 break;
             case "kakao":
                 authorizationUri = kakaoAuthorizationUri;
@@ -63,7 +64,6 @@ public class SocialController {
             case "naver":
                 authorizationUri = naverAuthorizationUri;
                 clientId = naverClientId;
-                scope = "&scope=openid";
                 break;
             default:
                 throw new CustomException(ErrorCode.NOT_FOUND, "provider");

@@ -10,7 +10,6 @@ public class ImgServiceImpl implements ImgService {
 
     private final ImgRepository imgRepository;
 
-
     @Override
     public ImgEntity getImg(String imgURL) {
         return null;
