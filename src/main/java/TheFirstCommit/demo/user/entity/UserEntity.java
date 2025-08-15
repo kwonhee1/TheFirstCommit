@@ -31,13 +31,19 @@ public class UserEntity extends CustomEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
+
+    @Column
+    private String number;
+
+    @Column
+    private String birth;
 
     @Column(nullable = false)
     private String provider;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String socialId;
 
     @Column(nullable = false)
@@ -51,7 +57,7 @@ public class UserEntity extends CustomEntity {
     @Column(nullable = false)
     private boolean isLeader = false;
 
-    @Column(nullable = false)
+    @Column
     private String relation;
 
     @OneToOne(targetEntity = ImgEntity.class)

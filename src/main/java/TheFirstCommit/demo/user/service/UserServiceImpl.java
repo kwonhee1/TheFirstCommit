@@ -2,9 +2,8 @@ package TheFirstCommit.demo.user.service;
 
 import TheFirstCommit.demo.family.FamilyEntity;
 import TheFirstCommit.demo.img.ImgEntity;
-import TheFirstCommit.demo.img.ImgService;
 import TheFirstCommit.demo.img.ImgServiceImpl;
-import TheFirstCommit.demo.user.dto.RegisterDto;
+import TheFirstCommit.demo.user.social.RegisterDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.repository.UserRepository;
 import java.util.Optional;

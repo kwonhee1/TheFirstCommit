@@ -4,7 +4,11 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
-    TEST_ERROR(HttpStatus.BAD_REQUEST, "00000", "Test error %s"),
+    NOT_FOUND(HttpStatus.NOT_FOUND, "00000", "Not Found %s"),
+
+    // token 관련
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "00001", "Invalid token"),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "00002", "Expired token"),
     ;
 
     public HttpStatus statusCode;
@@ -14,7 +18,7 @@ public enum ErrorCode {
     ErrorCode(HttpStatus statusCode, String CustomErrorCode, String errorMessage) {
         this.statusCode = statusCode; this.errorMessage = errorMessage; this.CustomErrorCode = CustomErrorCode;
     }
-    public Object toResponseBody() {
+    public Map<String, String> toResponseBody() {
         return Map.of("code", CustomErrorCode, "message", errorMessage);
     }
 }

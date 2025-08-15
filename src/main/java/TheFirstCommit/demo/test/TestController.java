@@ -9,8 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class TestController {
 
-    @GetMapping("/test")
+    @GetMapping("/api/test")
     public ResponseEntity test() {
+        return ResponseEntity.ok("Hello World");
+    }
+
+    @GetMapping("/public/test")
+    public ResponseEntity publicTest() {
         return ResponseEntity.ok("Hello World");
     }
 }
