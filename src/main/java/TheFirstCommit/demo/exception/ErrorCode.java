@@ -12,6 +12,9 @@ public enum ErrorCode {
     // token 관련
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "10001", "Invalid token"),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "10002", "Expired token"),
+
+    FAIL_SAVE_CARD(HttpStatus.BAD_REQUEST, "20001", "fail save card"),
+    NOT_EXIST_CARD(HttpStatus.BAD_REQUEST, "20002", "not exist card"),
     ;
 
     public HttpStatus statusCode;

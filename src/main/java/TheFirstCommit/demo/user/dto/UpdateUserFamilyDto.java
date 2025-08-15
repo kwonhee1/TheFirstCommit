@@ -1,6 +1,6 @@
 package TheFirstCommit.demo.user.dto;
 
-import TheFirstCommit.demo.family.FamilyEntity;
+import TheFirstCommit.demo.family.entity.FamilyEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

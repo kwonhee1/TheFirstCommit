@@ -39,3 +39,8 @@ social:
 jwt:
   access-token-time: 9999999  #3600 # 60 * 60 1시간
   refresh-token-time: 9999999  #604800 # 60 * 60 * 24 * 7 1주일
+
+payment:
+  price: 6900
+  second-week-sunday: 0 0 0 ? * 1#2 # 매월 2번 째 주 일요일 0시
+  four-week-sunday: 0 0 0 ? * 1#2 # 매월 4번 째 주 일요일 0시

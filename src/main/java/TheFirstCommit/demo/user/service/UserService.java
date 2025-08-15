@@ -1,12 +1,9 @@
 package TheFirstCommit.demo.user.service;
 
-import TheFirstCommit.demo.family.FamilyEntity;
 import TheFirstCommit.demo.user.dto.RequestUpdateUserInfoDto;
 import TheFirstCommit.demo.user.dto.UpdateUserFamilyDto;
 import TheFirstCommit.demo.user.social.RegisterDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
-import java.util.Optional;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 

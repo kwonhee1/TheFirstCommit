@@ -1,7 +1,7 @@
 package TheFirstCommit.demo.user.entity;
 
 import TheFirstCommit.demo.CustomEntity;
-import TheFirstCommit.demo.family.FamilyEntity;
+import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.user.dto.RequestUpdateUserInfoDto;
 import TheFirstCommit.demo.user.dto.UpdateUserFamilyDto;
@@ -16,7 +16,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
