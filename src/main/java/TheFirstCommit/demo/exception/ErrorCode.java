@@ -13,8 +13,12 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "10001", "Invalid token"),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "10002", "Expired token"),
 
+    // 결제 관련
     FAIL_SAVE_CARD(HttpStatus.BAD_REQUEST, "20001", "fail save card"),
     NOT_EXIST_CARD(HttpStatus.BAD_REQUEST, "20002", "not exist card"),
+
+    // family 관련 500??
+    NOT_LEADER(HttpStatus.BAD_REQUEST, "50001", "not leader"),
     ;
 
     public HttpStatus statusCode;

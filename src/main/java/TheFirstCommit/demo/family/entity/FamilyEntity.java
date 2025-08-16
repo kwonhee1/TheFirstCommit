@@ -29,11 +29,17 @@ public class FamilyEntity extends CustomEntity {
     @GeneratedValue
     private long id;
 
+    @OneToOne(mappedBy = "family")
+    private CardEntity card;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PaymentDay paymentDay;
 
-    @OneToOne(mappedBy = "family")
-    private CardEntity card;
+    @Column
+    private String familyName;
+
+    @OneToOne(mappedBy = "family", targetEntity = ElderEntity.class)
+    private ElderEntity elder;
 
 }
