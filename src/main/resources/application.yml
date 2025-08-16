@@ -52,3 +52,7 @@ springdoc:
     version: "v1.0.0"
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+pinata.api.key: ${PINATA_API_KEY}
+pinata.api.secret: ${PINATA_API_SECRET}
+pinata.api.url: ${PINATA_API_URL}
