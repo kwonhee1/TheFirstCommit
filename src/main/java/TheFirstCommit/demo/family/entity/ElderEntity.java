@@ -2,12 +2,13 @@ package TheFirstCommit.demo.family.entity;
 
 import TheFirstCommit.demo.family.dto.request.RequestElderDto;
 import TheFirstCommit.demo.img.ImgEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -25,7 +26,11 @@ import lombok.NoArgsConstructor;
 public class ElderEntity {
 
     @Id
+    @Column
+    private Long id;
+
     @OneToOne(targetEntity = FamilyEntity.class)
+    @MapsId
     @JoinColumn(name = "family_id")
     private FamilyEntity family;
 
@@ -47,7 +52,7 @@ public class ElderEntity {
     @Column(nullable = false)
     private String addressNumber;
 
-    @ManyToOne(targetEntity = ImgEntity.class)
+    @ManyToOne(targetEntity = ImgEntity.class, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "img_id")
     private ImgEntity img;
 

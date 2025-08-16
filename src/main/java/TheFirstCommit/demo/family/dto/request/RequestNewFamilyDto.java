@@ -16,13 +16,7 @@ public class RequestNewFamilyDto {
     private String familyName;
     private PaymentDay paymentDay;
 
-    private RequestElderDto elder;
-
     private String relation;
-
-    public ElderEntity toElderEntity(FamilyEntity familyEntity, ImgEntity imgEntity) {
-        return elder.toEntity(familyEntity, imgEntity);
-    }
 
     public FamilyEntity toFamilyEntity() {
         return FamilyEntity.builder()

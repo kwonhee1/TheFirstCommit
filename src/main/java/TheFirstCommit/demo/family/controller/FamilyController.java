@@ -6,6 +6,9 @@ import TheFirstCommit.demo.family.dto.request.RequestJoinFamilyDto;
 import TheFirstCommit.demo.family.dto.request.RequestNewFamilyDto;
 import TheFirstCommit.demo.family.service.FamilyService;
 import TheFirstCommit.demo.user.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,10 +32,11 @@ public class FamilyController {
     @PostMapping("/social/family")
     public ResponseEntity createNewFamily(
         @ModelAttribute RequestNewFamilyDto dto ,
+        @RequestPart(required = true, name = "elder") RequestElderDto elderDto ,
         @RequestPart(required = true, name = "elderImg") MultipartFile elderImgFile,
         @AuthenticationPrincipal UserEntity user)
     {
-        familyService.save(user, dto, elderImgFile);
+        familyService.save(user, dto, elderDto, elderImgFile);
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 
@@ -46,22 +50,22 @@ public class FamilyController {
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 
-    @GetMapping("/api/family/code")
+    @GetMapping("/api/family/invit")
     public ResponseEntity getFamilyCode(@AuthenticationPrincipal UserEntity user) {
-        return ResponseEntity.ok().body(new SuccessResponse("success", familyService.getFamilyCode(user)));
+        return ResponseEntity.ok().body(new SuccessResponse("success", Map.of("familyCode", familyService.getFamilyCode(user))));
     }
 
-    @PostMapping("/social/family/join")
+    @PostMapping("/social/family/invit")
     public ResponseEntity joinFamily(@AuthenticationPrincipal UserEntity user, @RequestBody RequestJoinFamilyDto dto) {
         familyService.joinFamily(user, dto);
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 
-    @GetMapping("/social/family/join")
+    @GetMapping("/social/family/invit")
     public ResponseEntity checkJoinFamily(
-        @RequestParam(name = "code") String familyCode
+        @RequestBody Map<String, String> body
     ) {
-        if(familyService.getFamilyByCode(familyCode).isPresent())
+        if(familyService.getFamilyByCode(body.get("familyCode")).isPresent())
             return ResponseEntity.ok().body(new SuccessResponse("exist", null));
         else 
             return ResponseEntity.ok().body(new SuccessResponse("not exist", null));

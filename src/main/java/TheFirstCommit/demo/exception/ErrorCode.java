@@ -8,6 +8,7 @@ public enum ErrorCode {
     SOCIAL_AUTHORIZED(HttpStatus.FORBIDDEN, "00009", "가족구성을 완성해주세요"),
 
     NOT_FOUND(HttpStatus.NOT_FOUND, "00001", "Not Found %s"),
+    ALREADY_EXIST(HttpStatus.BAD_REQUEST, "00002", "already exist %s") ,
 
     // token 관련
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "10001", "Invalid token"),
@@ -27,8 +28,5 @@ public enum ErrorCode {
 
     ErrorCode(HttpStatus statusCode, String CustomErrorCode, String errorMessage) {
         this.statusCode = statusCode; this.errorMessage = errorMessage; this.CustomErrorCode = CustomErrorCode;
-    }
-    public Map<String, String> toResponseBody() {
-        return Map.of("code", CustomErrorCode, "message", errorMessage);
     }
 }

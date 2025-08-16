@@ -16,7 +16,6 @@ import TheFirstCommit.demo.img.ImgService;
 import TheFirstCommit.demo.user.dto.UpdateUserFamilyDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +30,15 @@ public class FamilyService {
     private final UserService userService;
     private final ImgService imgService;
 
-    public void save(UserEntity user, RequestNewFamilyDto dto, MultipartFile elderImgFile) {
+    public void save(UserEntity user, RequestNewFamilyDto familyDto, RequestElderDto elderDto, MultipartFile elderImgFile) {
+        if(user.getFamily() != null)
+            throw new CustomException(ErrorCode.ALREADY_EXIST, "family");
+
         // family 저장, elder 저장, user family update
         ImgEntity imgEntity = imgService.save(elderImgFile);
-        FamilyEntity family = familyRepository.save(dto.toFamilyEntity());
-        elderRepository.save(dto.toElderEntity(family, imgEntity));
-        userService.updateUserFamily(user, new UpdateUserFamilyDto(family, dto.getRelation(), true));
+        FamilyEntity family = familyRepository.save(familyDto.toFamilyEntity());
+        elderRepository.save(elderDto.toEntity(family, imgEntity));
+        userService.updateUserFamily(user, new UpdateUserFamilyDto(family, familyDto.getRelation(), true));
     }
 
     // elder 정보 수정 (leader 만 가능!)
@@ -44,7 +46,7 @@ public class FamilyService {
         if(!user.isLeader())
             throw new CustomException(ErrorCode.NOT_LEADER);
         ElderEntity elder = elderRepository.findByUserId(user.getId()).orElseThrow(
-            ()->{return new CustomException(ErrorCode.NOT_FOUND, "elder");}
+            ()->{return new CustomException(ErrorCode.NOT_FOUND, "elder");} // api인데 family가 없거나 elder가 없는 경우는 불가능함
         );
 
         elder.update(dto);
@@ -62,7 +64,7 @@ public class FamilyService {
 
     // join with family code
     public void joinFamily(UserEntity user, RequestJoinFamilyDto dto) {
-        FamilyEntity family = getFamilyByCode(dto.getCode()).orElseThrow(()->{return new CustomException(ErrorCode.NOT_FOUND, "family");});
+        FamilyEntity family = getFamilyByCode(dto.getFamilyCode()).orElseThrow(()->{return new CustomException(ErrorCode.NOT_FOUND, "family");});
         userService.updateUserFamily(user, new UpdateUserFamilyDto(family, dto.getRelation(), false));
     }
 
@@ -73,12 +75,10 @@ public class FamilyService {
 
     // --------- validate
 
-    public Optional<FamilyEntity> getFamilyByCode(String familyCode){
+    public Optional<FamilyEntity> getFamilyByCode(String familyCode) {
+        if(familyCode == null)
+            throw new CustomException(ErrorCode.NOT_FOUND, "familyCode");
         return familyRepository.findById(FamilyCodeUtil.decode(familyCode));
-    }
-
-    public List<FamilyEntity> findAll() {
-        return familyRepository.findAll();
     }
 
 }

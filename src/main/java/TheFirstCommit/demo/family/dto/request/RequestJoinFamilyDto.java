@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RequestJoinFamilyDto {
 
-    private String code;
+    private String familyCode;
     private String relation;
 
 }
