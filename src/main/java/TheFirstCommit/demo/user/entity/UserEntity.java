@@ -3,6 +3,7 @@ package TheFirstCommit.demo.user.entity;
 import TheFirstCommit.demo.CustomEntity;
 import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.img.ImgEntity;
+import TheFirstCommit.demo.payment.entity.CardEntity;
 import TheFirstCommit.demo.user.dto.RequestUpdateUserInfoDto;
 import TheFirstCommit.demo.user.dto.UpdateUserFamilyDto;
 import jakarta.persistence.Column;
@@ -62,6 +63,9 @@ public class UserEntity extends CustomEntity {
     @OneToOne(targetEntity = ImgEntity.class)
     @JoinColumn(name = "img_id", nullable = true)
     private ImgEntity img;
+
+    @OneToOne(targetEntity = CardEntity.class, mappedBy = "user")
+    private CardEntity card;
 
     public void update(RequestUpdateUserInfoDto dto) {
         if(dto.getBirth() != null && !dto.getBirth().isEmpty())

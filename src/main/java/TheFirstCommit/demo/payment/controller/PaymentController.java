@@ -20,14 +20,14 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/card")
-    public ResponseEntity saveNesCard(@AuthenticationPrincipal UserEntity user, RequestSaveCardDto dto) {
+    public ResponseEntity saveNewCard(@AuthenticationPrincipal UserEntity user, RequestSaveCardDto dto) {
         paymentService.saveCard(user, dto);
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 
     @GetMapping("/test")
     public ResponseEntity testPayment(@AuthenticationPrincipal UserEntity user) {
-        if(paymentService.payment(user.getFamily().getCard()))
+        if(paymentService.payment(user.getCard()))
             return ResponseEntity.ok().body(new SuccessResponse("success", null));
         return ResponseEntity.badRequest().body(new SuccessResponse("fail", null));
     }

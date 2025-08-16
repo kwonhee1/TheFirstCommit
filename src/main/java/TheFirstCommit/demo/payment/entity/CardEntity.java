@@ -35,8 +35,8 @@ public class CardEntity extends CustomEntity {
     @Column
     private String customerKey;
 
-    @OneToOne(targetEntity = FamilyEntity.class)
-    @JoinColumn(name = "family_id")
-    private FamilyEntity family;
+    @OneToOne(targetEntity = UserEntity.class)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
 }
