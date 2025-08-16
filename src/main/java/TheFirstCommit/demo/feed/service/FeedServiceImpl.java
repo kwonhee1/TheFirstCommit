@@ -60,12 +60,11 @@ public class FeedServiceImpl implements FeedService {
         FeedEntity feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new RuntimeException("피드를 찾을 수 없습니다.")); // CustomException으로 변경 권장
 
-        if (!feed.getUser().getId().equals(user.getId())) {
+        if (feed.getUser().getId() != user.getId()) {
             throw new RuntimeException("수정 권한이 없습니다."); // CustomException으로 변경 권장
         }
 
         // 2. 텍스트 정보 업데이트 (요청에 값이 있을 경우에만 변경)
-        if (requestDto.getTitle() != null) feed.updateTitle(requestDto.getTitle());
         if (requestDto.getText() != null) feed.updateText(requestDto.getText());
         if (requestDto.getLayout() != null) feed.updateLayout(requestDto.getLayout());
 
@@ -91,5 +90,23 @@ public class FeedServiceImpl implements FeedService {
                 }
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void deleteFeed(Long feedId, UserEntity user){
+        FeedEntity feed = feedRepository.findById(feedId)
+                .orElseThrow(() -> new RuntimeException("피드를 찾을 수 없습니다."));
+
+        if (feed.getUser().getId() != user.getId()){
+            throw new RuntimeException("삭제 권한이 없습니다.");
+        }
+
+        List<ImgFeedEntity> imgFeedsToDelete = List.copyOf(feed.getImgFeeds());
+        for(ImgFeedEntity imgFeed : imgFeedsToDelete){
+            imgService.delete(imgFeed.getImg());
+        }
+
+        feedRepository.delete(feed);
     }
 }

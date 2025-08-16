@@ -9,4 +9,5 @@ import java.util.List;
 public interface FeedService {
     void createFeed(CreateFeedRequestDto requestDto, List<MultipartFile> imageFiles, UserEntity user);
     void updateFeed(Long feedId, UpdateFeedRequestDto requestDto, List<MultipartFile> addImageFiles, UserEntity user);
+    void deleteFeed(Long feedId, UserEntity user);
 }
