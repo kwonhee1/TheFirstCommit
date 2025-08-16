@@ -8,5 +8,5 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Getter @Setter
 public class SocialDto {
-    private final String code;
+    private String code;
 }
