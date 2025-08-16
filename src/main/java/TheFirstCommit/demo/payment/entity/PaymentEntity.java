@@ -29,4 +29,8 @@ public class PaymentEntity extends CustomEntity {
     @JoinColumn(nullable = false, name = "card_id")
     private CardEntity card;
 
+    @ManyToOne(targetEntity = FamilyEntity.class)
+    @JoinColumn(nullable = false, name="family_id")
+    private FamilyEntity family;
+
 }

@@ -14,6 +14,7 @@ import TheFirstCommit.demo.user.entity.UserEntity;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class PaymentService {
             CardEntity.builder()
                 .customerKey(cardInfo.getCustomerKey())
                 .billingKey(cardInfo.getBillingKey())
-                .family(user.getFamily())
+                .user(user)
                 .build()
         );
         log.info("Card saved " + user.getId() + ", " + user.getName());
@@ -87,13 +88,17 @@ public class PaymentService {
     @Scheduled(cron = "${payment.four-week-sunday}")
     @Scheduled(cron = "${payment.second-week-sunday}")
     public void MonthlyPayment() {
-        for(FamilyEntity family : familyService.findAll()){
-            CardEntity card = family.getCard();
+        List<UserEntity> allLeader = paymentRepository.findAllLeader();
+        for(UserEntity leader : allLeader) {
+            CardEntity card = leader.getCard();
+            FamilyEntity family = leader.getFamily();
+
             if(payment(card)) {
                 log.info("monthly payment success " + family.getId() + ", "); // 이후 받는 분 정보 추가 log 출력
                 paymentRepository.save(
                     PaymentEntity.builder()
                         .card(card)
+                        .family(family)
                         .build()
                 );
             }

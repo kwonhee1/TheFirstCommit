@@ -33,7 +33,4 @@ public class FamilyEntity extends CustomEntity {
     @Enumerated(EnumType.STRING)
     private PaymentDay paymentDay;
 
-    @OneToOne(mappedBy = "family")
-    private CardEntity card;
-
 }
