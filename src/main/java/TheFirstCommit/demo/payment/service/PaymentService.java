@@ -7,6 +7,7 @@ import TheFirstCommit.demo.family.service.FamilyService;
 import TheFirstCommit.demo.payment.dto.CardInfoDto;
 import TheFirstCommit.demo.payment.dto.RequestSaveCardDto;
 import TheFirstCommit.demo.payment.entity.CardEntity;
+import TheFirstCommit.demo.payment.entity.PaymentEntity;
 import TheFirstCommit.demo.payment.repository.CardRepository;
 import TheFirstCommit.demo.payment.repository.PaymentRepository;
 import TheFirstCommit.demo.user.entity.UserEntity;
@@ -87,8 +88,15 @@ public class PaymentService {
     @Scheduled(cron = "${payment.second-week-sunday}")
     public void MonthlyPayment() {
         for(FamilyEntity family : familyService.findAll()){
-            if(payment(family.getCard()))
+            CardEntity card = family.getCard();
+            if(payment(card)) {
                 log.info("monthly payment success " + family.getId() + ", "); // 이후 받는 분 정보 추가 log 출력
+                paymentRepository.save(
+                    PaymentEntity.builder()
+                        .card(card)
+                        .build()
+                );
+            }
             else
                 log.info("monthly payment fail " + family.getId() + ", ");
         }

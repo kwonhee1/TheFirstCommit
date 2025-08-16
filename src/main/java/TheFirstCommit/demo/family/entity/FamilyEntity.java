@@ -1,14 +1,16 @@
 package TheFirstCommit.demo.family.entity;
 
 import TheFirstCommit.demo.CustomEntity;
+import TheFirstCommit.demo.family.PaymentDay;
 import TheFirstCommit.demo.payment.entity.CardEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +30,8 @@ public class FamilyEntity extends CustomEntity {
     private long id;
 
     @Column(nullable = false)
-    private LocalDateTime payDay;
+    @Enumerated(EnumType.STRING)
+    private PaymentDay paymentDay;
 
     @OneToOne(mappedBy = "family")
     private CardEntity card;
