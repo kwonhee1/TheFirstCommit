@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@RequestMapping("/public/social/")
+@RequestMapping("/public/social")
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -48,13 +48,14 @@ public class SocialController {
     @Value("${FRONT_DOMAIN}")
     private String domain;
 
-    @GetMapping("{provider}")
+    @GetMapping("/{provider}")
     public void social(@PathVariable("provider") String provider, HttpServletResponse response) throws IOException {
         String authorizationUri, clientId, scope = "";
         switch (provider) {
             case "google":
                 authorizationUri = googleAuthorizationUri;
                 clientId = googleClientId;
+                scope = "&scope=openid";
                 break;
             case "kakao":
                 authorizationUri = kakaoAuthorizationUri;
@@ -63,7 +64,6 @@ public class SocialController {
             case "naver":
                 authorizationUri = naverAuthorizationUri;
                 clientId = naverClientId;
-                scope = "&scope=openid";
                 break;
             default:
                 throw new CustomException(ErrorCode.NOT_FOUND, "provider");
@@ -76,19 +76,19 @@ public class SocialController {
         );
     }
 
-    @PostMapping("google")
+    @PostMapping("/google")
     public ResponseEntity google(@RequestBody SocialDto dto) {
         UserEntity user = googleService.socialLogin(dto.getCode());
         return response(user.getId());
     }
 
-    @PostMapping("kakao")
+    @PostMapping("/kakao")
     public ResponseEntity kakao(@RequestBody SocialDto dto) {
         UserEntity user = kakaoService.socialLogin(dto.getCode());
         return response(user.getId());
     }
 
-    @PostMapping("naver")
+    @PostMapping("/naver")
     public ResponseEntity naver(@RequestBody SocialDto dto) {
         UserEntity user = naverService.socialLoin(dto.getCode());
         return response(user.getId());

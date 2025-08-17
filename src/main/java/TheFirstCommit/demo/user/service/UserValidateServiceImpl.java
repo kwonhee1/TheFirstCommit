@@ -17,4 +17,9 @@ public class UserValidateServiceImpl implements UserValidateService {
     public Optional<UserEntity> findById(Long userId) {
         return userRepository.findById(userId);
     }
+
+    @Override
+    public Optional<UserEntity> findLeader(Long familyId){
+        return userRepository.findLeader(familyId);
+    }
 }

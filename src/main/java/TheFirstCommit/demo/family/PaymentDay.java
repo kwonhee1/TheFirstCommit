@@ -1,10 +1,10 @@
-package TheFirstCommit.demo.payment;
+package TheFirstCommit.demo.family;
 
-public enum PaymentDate {
+public enum PaymentDay {
     DAY_15(15) ,
     DAY_30(30)
     ;
-    PaymentDate(int day) {
+    PaymentDay(int day) {
         this.day = day;
     }
     private int day;

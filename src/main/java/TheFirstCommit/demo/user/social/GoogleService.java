@@ -42,19 +42,16 @@ public class GoogleService {
 
         Map<String, String> info = getUserInfoFromGoogle(accessToken);
 
-        return userService.login(info.get("id")).orElseGet(
-            () -> userService.register(
-                RegisterDto
-                    .builder()
-                    .provider("google")
-                    .socialId(info.get("id"))
-                    // .email(info.get("email"))
-                    .name(info.get("name"))
-                    // .nickName(info.get("given_name"))
-                    // .birth(info.get("birth"))
-                    .imgURL(info.get("picture"))
-                    .build()
-            )
+        return userService.login(info.get("id"), RegisterDto
+            .builder()
+            .provider("google")
+            .socialId(info.get("id"))
+            // .email(info.get("email"))
+            .name(info.get("name"))
+            // .nickName(info.get("given_name"))
+            // .birth(info.get("birth"))
+            .imgURL(info.get("picture"))
+            .build()
         );
     }
 

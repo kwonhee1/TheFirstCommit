@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public enum UserRole {
     SOCIAL("ROLE_SOCIAL"), // 로그인만 하고 가족이 없는 상태
-    USER("ROLE_SOCIAL","ROLE_USER") ,
+    USER("ROLE_USER") ,
     ADMIN("ROLE_SOCIAL","ROLE_ADMIN", "ROLE_USER")
     ;
     String[] roles;
