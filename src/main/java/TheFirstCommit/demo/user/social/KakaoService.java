@@ -31,20 +31,17 @@ public class KakaoService {
     public UserEntity socialLogin(String code) {
         Map<String, Object> info = getUserFromKakao(code);
 
-        return userService.login(String.valueOf(info.get("id"))).orElseGet(
-            ()->userService.register(
-                RegisterDto
-                    .builder()
-                    .provider("kakao")
-                    .socialId( String.valueOf(info.get("id")))
-                    //.nickName( (String) ((Map<String, Object>)info.get("properties")).get("nickname") )
-                    .name((String) ((Map<String, Object>)info.get("kakao_account")).get("name"))
-                    .number((String) ((Map<String, Object>)info.get("kakao_account")).get("phone"))
-                    // .birth()
-                    //.email( (String) ((Map<String, Object>)info.get("kakao_account")).get("email") )
-                    .imgURL((String) ((Map<String, Object>)info.get("properties")).get("profile_image"))
-                    .build()
-            )
+        return userService.login(String.valueOf(info.get("id")), RegisterDto
+            .builder()
+            .provider("kakao")
+            .socialId( String.valueOf(info.get("id")))
+            //.nickName( (String) ((Map<String, Object>)info.get("properties")).get("nickname") )
+            .name((String) ((Map<String, Object>)info.get("kakao_account")).get("name"))
+            .number((String) ((Map<String, Object>)info.get("kakao_account")).get("phone"))
+            // .birth()
+            //.email( (String) ((Map<String, Object>)info.get("kakao_account")).get("email") )
+            .imgURL((String) ((Map<String, Object>)info.get("properties")).get("profile_image"))
+            .build()
         );
     }
 

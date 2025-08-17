@@ -7,4 +7,6 @@ public interface UserValidateService {
 
     Optional<UserEntity> findById(Long userId);
 
+    Optional<UserEntity> findLeader(Long familyId);
+
 }
