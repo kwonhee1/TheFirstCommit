@@ -17,12 +17,12 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public ImgEntity save(MultipartFile file) {
-        return null;
+        return ImgEntity.builder().cid("cid").build();
     }
 
     @Override
     public ImgEntity update(ImgEntity old, MultipartFile file) {
-        return null;
+        return old;
     }
 
     @Override

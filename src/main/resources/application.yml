@@ -44,3 +44,6 @@ payment:
   price: 6900
   second-week-sunday: 0 0 0 ? * 1#2 # 매월 2번 째 주 일요일 0시
   four-week-sunday: 0 0 0 ? * 1#2 # 매월 4번 째 주 일요일 0시
+
+family:
+  code-len: 6 # 0<=familyId<=2조 :: 이상의 family 생성시 자리 수 증가 필요

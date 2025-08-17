@@ -33,4 +33,10 @@ public class FamilyEntity extends CustomEntity {
     @Enumerated(EnumType.STRING)
     private PaymentDay paymentDay;
 
+    @Column
+    private String familyName;
+
+    @OneToOne(mappedBy = "family", targetEntity = ElderEntity.class)
+    private ElderEntity elder;
+
 }
