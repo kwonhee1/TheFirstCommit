@@ -20,6 +20,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class PaymentService {
 
     // card
 
-    public void saveCard(UserEntity user, RequestSaveCardDto dto) {
+    public CardInfoDto saveCard(UserEntity user, RequestSaveCardDto dto) {
         CardInfoDto cardInfo = getCardInfo(dto);
         cardRepository.save(
             CardEntity.builder()
@@ -52,6 +53,7 @@ public class PaymentService {
                 .build()
         );
         log.info("Card saved " + user.getId() + ", " + user.getName());
+        return cardInfo;
     }
 
     public void remove(UserEntity user) {
@@ -59,7 +61,8 @@ public class PaymentService {
     }
 
     private CardInfoDto getCardInfo(RequestSaveCardDto dto) {
-        String auth = "Basic " + Base64.getEncoder().encodeToString( (TOSS_SECRET+":") .getBytes(StandardCharsets.UTF_8));
+        log.info(dto.toString());
+        String auth = "Basic " + Base64.getEncoder().encodeToString( (TOSS_SECRET+":") .getBytes());
 
         WebClient webClient = WebClient.builder()
             .baseUrl("https://api.tosspayments.com")
@@ -69,19 +72,19 @@ public class PaymentService {
 
         Map<String, Object> response = webClient.post()
             .uri("/v1/billing/authorizations/issue")
-            .body(dto, RequestSaveCardDto.class)
+            .bodyValue(dto)
             .retrieve()
-            .onStatus(httpStatusCode -> httpStatusCode.is4xxClientError(), (clientResponse)->{
-                log.info("Toss API Error Body: {}", clientResponse.bodyToMono(String.class).block());
-                throw new CustomException(ErrorCode.FAIL_SAVE_CARD);
-            })
+            .onStatus(HttpStatusCode::is4xxClientError, clientResponse ->
+            clientResponse.bodyToMono(String.class)
+                .flatMap(errorBody -> {
+                    log.error("Toss API Error Body: {}", errorBody);
+                    return Mono.error(new CustomException(ErrorCode.FAIL_SAVE_CARD));
+                })
+            )
             .bodyToMono(Map.class)
             .block(); // 동기 호출
 
-        return CardInfoDto.builder()
-            .billingKey((String)response.get("billingKey"))
-            .customerKey((String)response.get("customerKey"))
-            .build();
+        return new CardInfoDto(response);
     }
 
     // payment
@@ -142,6 +145,5 @@ public class PaymentService {
             .map(body -> true) // 정상 응답이면 true
             .defaultIfEmpty(false) // onStatus에서 Mono.empty()를 반환하면 여기서 false 처리
             .block();
-
     }
 }
