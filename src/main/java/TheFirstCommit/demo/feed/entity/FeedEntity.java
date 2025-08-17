@@ -1,7 +1,7 @@
 package TheFirstCommit.demo.feed.entity;
 
 import TheFirstCommit.demo.CustomEntity;
-import TheFirstCommit.demo.family.FamilyEntity;
+import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.imgFeed.ImgFeedEntity;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import jakarta.persistence.*;
