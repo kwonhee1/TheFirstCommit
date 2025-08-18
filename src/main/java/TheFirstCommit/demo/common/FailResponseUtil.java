@@ -12,7 +12,7 @@ public class FailResponseUtil {
     public static void writeResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
-        new ObjectMapper().writeValue(response.getOutputStream(), Map.of("code", errorCode.CustomErrorCode, "message", errorCode.errorMessage));
+        new ObjectMapper().writeValue(response.getOutputStream(), Map.of("code", errorCode.customErrorCode, "message", errorCode.customMessage));
     }
 
 }

@@ -1,6 +1,5 @@
 package TheFirstCommit.demo.exception;
 
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
@@ -17,16 +16,17 @@ public enum ErrorCode {
     // 결제 관련
     FAIL_SAVE_CARD(HttpStatus.BAD_REQUEST, "20001", "fail save card"),
     NOT_EXIST_CARD(HttpStatus.BAD_REQUEST, "20002", "not exist card"),
+    TOO_MANY_CARDS(HttpStatus.BAD_REQUEST, "20003", "too many cards"),
 
     // family 관련 500??
     NOT_LEADER(HttpStatus.BAD_REQUEST, "50001", "not leader"),
     ;
 
     public HttpStatus statusCode;
-    public String CustomErrorCode;
-    public String errorMessage;
+    public String customErrorCode;
+    public String customMessage;
 
-    ErrorCode(HttpStatus statusCode, String CustomErrorCode, String errorMessage) {
-        this.statusCode = statusCode; this.errorMessage = errorMessage; this.CustomErrorCode = CustomErrorCode;
+    ErrorCode(HttpStatus statusCode, String CustomErrorCode, String customMessage) {
+        this.statusCode = statusCode; this.customMessage = customMessage; this.customErrorCode = CustomErrorCode;
     }
 }

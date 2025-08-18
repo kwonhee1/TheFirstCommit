@@ -1,4 +1,4 @@
-package TheFirstCommit.demo.user.dto;
+package TheFirstCommit.demo.user.dto.request;
 
 import TheFirstCommit.demo.family.entity.FamilyEntity;
 import lombok.AllArgsConstructor;

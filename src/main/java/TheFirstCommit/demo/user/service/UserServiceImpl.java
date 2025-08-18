@@ -2,8 +2,8 @@ package TheFirstCommit.demo.user.service;
 
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
-import TheFirstCommit.demo.user.dto.RequestUpdateUserInfoDto;
-import TheFirstCommit.demo.user.dto.UpdateUserFamilyDto;
+import TheFirstCommit.demo.user.dto.request.RequestUpdateUserInfoDto;
+import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
 import TheFirstCommit.demo.user.social.RegisterDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.repository.UserRepository;

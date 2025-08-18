@@ -1,4 +1,4 @@
-package TheFirstCommit.demo.user.dto;
+package TheFirstCommit.demo.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

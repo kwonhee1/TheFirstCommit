@@ -1,8 +1,6 @@
 package TheFirstCommit.demo.payment.dto;
 
 import java.util.Map;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,10 +21,6 @@ public class CardInfoDto {
         cardNumber = (String) response.get("cardNumber");
         customerKey = (String) response.get("customerKey");
         billingKey = (String) response.get("billingKey");
-    }
-
-    public Map toResponseDto() {
-        return Map.of("cardCompany", cardCompany, "cardNumber", cardNumber);
     }
 
 }

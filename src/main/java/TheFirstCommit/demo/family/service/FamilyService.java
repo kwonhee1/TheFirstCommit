@@ -13,7 +13,7 @@ import TheFirstCommit.demo.family.repository.ElderRepository;
 import TheFirstCommit.demo.family.repository.FamilyRepository;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
-import TheFirstCommit.demo.user.dto.UpdateUserFamilyDto;
+import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
 import java.util.Optional;

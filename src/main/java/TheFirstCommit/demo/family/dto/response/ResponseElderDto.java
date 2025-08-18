@@ -15,9 +15,17 @@ public class ResponseElderDto {
     private String address;
     private String addressDetail;
     private String addressNumber;
-    private String imgPid;
+    private String img;
 
     public static ResponseElderDto of(ElderEntity entity) {
-        return null; // not yet!
+        ResponseElderDto dto = new ResponseElderDto();
+        dto.setName(entity.getName());
+        dto.setBirth(entity.getBirth());
+        dto.setNumber(entity.getNumber());
+        dto.setAddress(entity.getAddress());
+        dto.setAddressDetail(entity.getAddressDetail());
+        dto.setAddressNumber(entity.getAddressNumber());
+        dto.setImg(entity.getImg().getCid());
+        return dto;
     }
 }
