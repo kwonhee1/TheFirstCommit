@@ -1,21 +1,25 @@
 package TheFirstCommit.demo.payment.entity;
 
-import TheFirstCommit.demo.CustomEntity;
-import TheFirstCommit.demo.family.entity.FamilyEntity;
+import TheFirstCommit.demo.BasedEntity;
 import TheFirstCommit.demo.user.entity.UserEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "card")
@@ -23,7 +27,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class CardEntity extends CustomEntity {
+@SQLDelete(sql = "UPDATE card SET delete_at = NOW() WHERE id = ?")
+@SQLRestriction("delete_at is null")
+public class CardEntity extends BasedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +38,20 @@ public class CardEntity extends CustomEntity {
     @Column
     private String billingKey;
 
-    @Column
+    @Column(unique = true)
     private String customerKey;
 
-    @OneToOne(targetEntity = UserEntity.class)
+    @Column
+    private String cardNumber;
+
+    @Column
+    private String cardCompany;
+
+    @ManyToOne(targetEntity = UserEntity.class)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @OneToMany(mappedBy = "card", cascade = {CascadeType.REMOVE})
+    private Set<PaymentEntity> paymentList;
 
 }

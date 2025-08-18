@@ -1,7 +1,7 @@
 package TheFirstCommit.demo.feed.entity;
 
-import TheFirstCommit.demo.CustomEntity;
-import TheFirstCommit.demo.family.FamilyEntity;
+import TheFirstCommit.demo.BasedEntity;
+import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.imgFeed.ImgFeedEntity;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "feed")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FeedEntity extends CustomEntity {
+public class FeedEntity extends BasedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

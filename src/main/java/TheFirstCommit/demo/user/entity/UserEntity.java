@@ -1,11 +1,11 @@
 package TheFirstCommit.demo.user.entity;
 
-import TheFirstCommit.demo.CustomEntity;
+import TheFirstCommit.demo.BasedEntity;
 import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.payment.entity.CardEntity;
-import TheFirstCommit.demo.user.dto.RequestUpdateUserInfoDto;
-import TheFirstCommit.demo.user.dto.UpdateUserFamilyDto;
+import TheFirstCommit.demo.user.dto.request.RequestUpdateUserInfoDto;
+import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,8 +14,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserEntity extends CustomEntity {
+public class UserEntity extends BasedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,8 +66,8 @@ public class UserEntity extends CustomEntity {
     @JoinColumn(name = "img_id", nullable = true)
     private ImgEntity img;
 
-    @OneToOne(targetEntity = CardEntity.class, mappedBy = "user")
-    private CardEntity card;
+    @OneToMany(targetEntity = CardEntity.class, mappedBy = "user")
+    private Set<CardEntity> card;
 
     public void update(RequestUpdateUserInfoDto dto) {
         if(dto.getBirth() != null && !dto.getBirth().isEmpty())

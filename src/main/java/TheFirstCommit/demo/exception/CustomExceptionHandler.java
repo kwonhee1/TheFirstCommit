@@ -10,7 +10,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity handleCustomException(CustomException e) {
-        return ResponseEntity.status(e.errorCode.statusCode).body(Map.of("code", e.errorCode.CustomErrorCode, "message", e.errorMessage));
+        return ResponseEntity.status(e.errorCode.statusCode).body(Map.of("code", e.errorCode.customErrorCode, "message", e.errorMessage));
     }
 
 
