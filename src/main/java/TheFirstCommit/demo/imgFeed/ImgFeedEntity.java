@@ -22,7 +22,7 @@ public class ImgFeedEntity {
     @JoinColumn(name = "feed_id")
     private FeedEntity feed;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "img_id")
     private ImgEntity img;
 

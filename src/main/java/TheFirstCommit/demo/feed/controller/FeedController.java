@@ -46,7 +46,7 @@ public class FeedController {
         return ResponseEntity.ok(new SuccessResponse("Feed updated successfully.", null));
     }
     @DeleteMapping("/{feedId}")
-    public ResponseEntity<?> deleteFeed(@PathVariable Long feedId,
+    public ResponseEntity<?> deleteFeed(@PathVariable("feedId") Long feedId, // <-- ("feedId") 추가
                                         @AuthenticationPrincipal UserEntity user){
         feedService.deleteFeed(feedId, user);
         return ResponseEntity.ok(new SuccessResponse("Feed deleted successfully.",null));
