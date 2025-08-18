@@ -4,6 +4,8 @@ import TheFirstCommit.demo.common.SuccessResponse;
 import TheFirstCommit.demo.family.dto.request.RequestElderDto;
 import TheFirstCommit.demo.family.dto.request.RequestJoinFamilyDto;
 import TheFirstCommit.demo.family.dto.request.RequestNewFamilyDto;
+import TheFirstCommit.demo.family.dto.response.FamilyPageDto;
+import TheFirstCommit.demo.family.dto.response.HomePageDto;
 import TheFirstCommit.demo.family.service.FamilyService;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -50,18 +52,20 @@ public class FamilyController {
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 
-    @GetMapping("/api/family/invit")
+    @GetMapping("/api/family/invite")
     public ResponseEntity getFamilyCode(@AuthenticationPrincipal UserEntity user) {
-        return ResponseEntity.ok().body(new SuccessResponse("success", Map.of("familyCode", familyService.getFamilyCode(user))));
+        String familyCode = familyService.getFamilyCode(user);
+        Long familyCount = familyService.getFamilyDto(user).getMemberCount();
+        return ResponseEntity.ok().body(new SuccessResponse("success", Map.of("familyCode", familyCode, "familyCount", familyCount)));
     }
 
-    @PostMapping("/social/family/invit")
+    @PostMapping("/social/family/invite")
     public ResponseEntity joinFamily(@AuthenticationPrincipal UserEntity user, @RequestBody RequestJoinFamilyDto dto) {
         familyService.joinFamily(user, dto);
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 
-    @GetMapping("/social/family/invit")
+    @GetMapping("/social/family/invite")
     public ResponseEntity checkJoinFamily(
         @RequestBody Map<String, String> body
     ) {
@@ -72,8 +76,14 @@ public class FamilyController {
     }
     
     @GetMapping("/api/family")
-    // 추후 추가 수정
     public ResponseEntity getFamilyData(@AuthenticationPrincipal UserEntity user) {
-        return ResponseEntity.ok().body(new SuccessResponse("success", familyService.getFamilyData(user)));
+        FamilyPageDto dto = familyService.getFamilyPage(user);
+        return ResponseEntity.ok().body(new SuccessResponse("success", dto));
+    }
+
+    @GetMapping("/api/family/home")
+    public ResponseEntity getFamilyHomePageDto(@AuthenticationPrincipal UserEntity user) {
+        HomePageDto dto = familyService.getHomePageDto(user);
+        return ResponseEntity.ok().body(new SuccessResponse("success", dto));
     }
 }

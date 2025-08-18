@@ -27,6 +27,6 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public void delete(ImgEntity img) {
-
+        imgRepository.delete(img);
     }
 }
