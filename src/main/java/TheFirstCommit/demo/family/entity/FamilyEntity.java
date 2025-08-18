@@ -1,8 +1,7 @@
 package TheFirstCommit.demo.family.entity;
 
-import TheFirstCommit.demo.CustomEntity;
+import TheFirstCommit.demo.BasedEntity;
 import TheFirstCommit.demo.family.PaymentDay;
-import TheFirstCommit.demo.payment.entity.CardEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-public class FamilyEntity extends CustomEntity {
+public class FamilyEntity extends BasedEntity {
 
     @Id
     @GeneratedValue
