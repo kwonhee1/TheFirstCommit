@@ -54,6 +54,10 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+repositories {
+	maven { url 'https://jitpack.io' }
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

@@ -1,4 +1,5 @@
-package TheFirstCommit.demo.infra;
+/*
+package TheFirstCommit.demo;
 
 import io.ipfs.api.IPFS;
 import io.ipfs.api.MerkleNode;
@@ -13,11 +14,12 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class IpfsService {
 
-    private final IPFS ipfs; // Config에서 Bean으로 등록된 IPFS 객체를 주입받음
+    private final IPFS ipfs; // Config에서 Bean으로 등록된 IPFS 객체 주입
 
     public String uploadFile(MultipartFile file) throws IOException {
-        NamedStreamable.ByteArrayWrapper stream = new NamedStreamable.ByteArrayWrapper(file.getOriginalFilename(), file.getBytes());
+        NamedStreamable.ByteArrayWrapper stream =
+                new NamedStreamable.ByteArrayWrapper(file.getOriginalFilename(), file.getBytes());
         MerkleNode addResult = ipfs.add(stream).get(0);
-        return addResult.hash.toBase58();
+        return addResult.hash.toString(); // CID 반환
     }
-}
+}*/

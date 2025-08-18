@@ -1,3 +1,4 @@
+
 package TheFirstCommit.demo.img;
 
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import TheFirstCommit.demo.infra.IpfsService;
+//import TheFirstCommit.demo.IpfsService;
 
 import java.io.IOException;
 import java.util.Map;
@@ -21,7 +22,7 @@ import java.util.Map;
 public class ImgServiceImpl implements ImgService {
 
     private final ImgRepository imgRepository;
-    private final IpfsService ipfsService;
+    //private final IpfsService ipfsService;
 
     @Value("${PINATA_API_KEY}")
     private String pinataApiKey;
@@ -38,13 +39,14 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public ImgEntity save(MultipartFile file) {
-        try {
+        /*try {
             String cid = ipfsService.uploadFile(file); // 업로드 로직 호출
             ImgEntity newImg = ImgEntity.builder().cid(cid).build();
             return imgRepository.save(newImg);
         } catch (IOException e) {
             throw new RuntimeException("IPFS file upload failed", e);
-        }
+        }*/
+        return ImgEntity.builder().cid("cid").build();
     }
 
     @Override
@@ -54,6 +56,7 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public void delete(ImgEntity img) {
-
+        imgRepository.deleteById(img.getId());
     }
 }
+
