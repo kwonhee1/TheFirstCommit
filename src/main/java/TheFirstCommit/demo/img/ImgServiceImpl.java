@@ -46,7 +46,8 @@ public class ImgServiceImpl implements ImgService {
         } catch (IOException e) {
             throw new RuntimeException("IPFS file upload failed", e);
         }*/
-        return ImgEntity.builder().cid("cid").build();
+        ImgEntity tempImg = ImgEntity.builder().cid("cid").build();
+        return imgRepository.save(tempImg);
     }
 
     @Override

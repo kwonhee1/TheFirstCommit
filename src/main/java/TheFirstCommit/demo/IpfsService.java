@@ -1,25 +1,16 @@
-/*
 package TheFirstCommit.demo;
 
-import io.ipfs.api.IPFS;
-import io.ipfs.api.MerkleNode;
-import io.ipfs.api.NamedStreamable;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @Service
-@RequiredArgsConstructor
 public class IpfsService {
 
-    private final IPFS ipfs; // Config에서 Bean으로 등록된 IPFS 객체 주입
-
+    // 팀원이 실제 IPFS 연동을 구현하기 전까지 사용할 임시 메소드
     public String uploadFile(MultipartFile file) throws IOException {
-        NamedStreamable.ByteArrayWrapper stream =
-                new NamedStreamable.ByteArrayWrapper(file.getOriginalFilename(), file.getBytes());
-        MerkleNode addResult = ipfs.add(stream).get(0);
-        return addResult.hash.toString(); // CID 반환
+        // 어떤 파일이 오든, 실제 업로드 없이 항상 "cid" 문자열만 반환
+        return "cid";
     }
-}*/
+}
