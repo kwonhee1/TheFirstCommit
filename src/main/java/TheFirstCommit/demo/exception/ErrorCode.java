@@ -18,6 +18,10 @@ public enum ErrorCode {
     NOT_EXIST_CARD(HttpStatus.BAD_REQUEST, "20002", "not exist card"),
     TOO_MANY_CARDS(HttpStatus.BAD_REQUEST, "20003", "too many cards"),
 
+    // img 관련
+    SAVE_FAIL(HttpStatus.BAD_REQUEST, "30001", "save fail"),
+    REMOVE_FAIL(HttpStatus.BAD_REQUEST, "30002", "remove fail"),
+
     // family 관련 500??
     NOT_LEADER(HttpStatus.BAD_REQUEST, "50001", "not leader"),
     ;

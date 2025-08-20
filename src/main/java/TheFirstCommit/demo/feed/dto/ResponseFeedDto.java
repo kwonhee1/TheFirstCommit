@@ -2,7 +2,7 @@ package TheFirstCommit.demo.feed.dto;
 
 import TheFirstCommit.demo.feed.entity.FeedEntity;
 import TheFirstCommit.demo.img.ImgEntity;
-import TheFirstCommit.demo.imgFeed.ImgFeedEntity;
+import TheFirstCommit.demo.feed.entity.ImgFeedEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;

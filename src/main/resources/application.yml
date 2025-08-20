@@ -60,6 +60,3 @@ springdoc:
     version: "v1.0.0"
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
-
-IPFS_MULTI_ADDRESS: /ip4/127.0.0.1/tcp/5001
-
