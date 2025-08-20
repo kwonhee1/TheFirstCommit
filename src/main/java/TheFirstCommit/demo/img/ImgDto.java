@@ -13,6 +13,9 @@ public class ImgDto {
 
     public static ImgDto of(ImgEntity img) {
         ImgDto dto = new ImgDto();
+        if(img == null) {
+            return dto;
+        }
         dto.id = img.getId();
         dto.cid = img.getCid();
         return dto;

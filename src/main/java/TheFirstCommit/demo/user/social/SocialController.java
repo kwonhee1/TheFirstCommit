@@ -99,9 +99,8 @@ public class SocialController {
         String access = JWTUtil.generateAccessToken(user.getId());
         String refresh = JWTUtil.generateRefreshToken(user.getId());
 
-        ResponseTokenDto tokenDto = ResponseTokenDto.all(access, refresh);
-        ResponseUserDetailDto userDetailDto = ResponseUserDetailDto.of(user);
+        ResponseTokenDto tokenDto = ResponseTokenDto.all(access, refresh, user);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", Map.of("token", tokenDto, "user", userDetailDto) ));
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", tokenDto));
     }
 }

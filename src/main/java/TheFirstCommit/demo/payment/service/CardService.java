@@ -2,6 +2,7 @@ package TheFirstCommit.demo.payment.service;
 
 import TheFirstCommit.demo.exception.CustomException;
 import TheFirstCommit.demo.exception.ErrorCode;
+import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.payment.dto.CardInfoDto;
 import TheFirstCommit.demo.payment.dto.RequestSaveCardDto;
 import TheFirstCommit.demo.payment.dto.response.ResponseCardInfoDto;
@@ -9,6 +10,7 @@ import TheFirstCommit.demo.payment.entity.CardEntity;
 import TheFirstCommit.demo.payment.repository.CardRepository;
 import TheFirstCommit.demo.payment.repository.PaymentRepository;
 import TheFirstCommit.demo.user.entity.UserEntity;
+import TheFirstCommit.demo.user.repository.UserRepository;
 import TheFirstCommit.demo.user.service.UserValidateService;
 import java.util.Base64;
 import java.util.List;
@@ -30,7 +32,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class CardService {
 
-    private final UserValidateService userValidateService;
+    private final UserRepository userRepository;
     @Value("${toss.secret}")
     private String TOSS_SECRET;
 
@@ -54,7 +56,10 @@ public class CardService {
                 .build()
         );
 
-        userValidateService.getFamily(user).setIsChanged(false);
+        Optional<FamilyEntity> userOpt = userRepository.getFamily(user.getId());
+        if(userOpt.isPresent())
+            userOpt.get().setIsChanged(false);
+
 
         log.info("Card saved " + user.getId() + ", " + user.getName());
         return cardInfo;

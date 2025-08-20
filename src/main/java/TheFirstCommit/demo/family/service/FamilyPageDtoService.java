@@ -35,6 +35,8 @@ public class FamilyPageDtoService {
     }
 
     public HomePageDto getHomePageDto(UserEntity user) {
+        feedService.canFeed(user);
+
         ResponsePaymentSummeryDto payment = paymentService.getFamilyPaymentSummeryDto(user);
         ResponseFamilyDto familyDto = familyService.getFamilyDto(user);
         List<ResponseFeedDto> feedList = feedService.getFeedDtoList(userValidateService.getFamily(user));
