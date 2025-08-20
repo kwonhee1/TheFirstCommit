@@ -1,9 +1,6 @@
 package TheFirstCommit.demo.payment.dto.response;
 
 import TheFirstCommit.demo.family.PaymentDay;
-import TheFirstCommit.demo.user.dto.response.ResponseUserProfileDto;
-import TheFirstCommit.demo.user.entity.UserEntity;
-import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,18 +10,13 @@ import lombok.Setter;
 @Setter
 public class ResponsePaymentSummeryDto {
 
+    private boolean hasCard;
     private PaymentDay paymentDay;
-    private LocalDate nextPaymentDay;
-    private LocalDate sincePaymentDay;
-    private ResponseUserProfileDto leader;
 
-    public ResponsePaymentSummeryDto of(PaymentDay paymentDay, UserEntity leader) {
+    public static ResponsePaymentSummeryDto of(boolean hasCard, PaymentDay paymentDay) {
         ResponsePaymentSummeryDto dto = new ResponsePaymentSummeryDto();
-        dto.leader = ResponseUserProfileDto.of(leader);
+        dto.hasCard = hasCard;
         dto.paymentDay = paymentDay;
-        dto.nextPaymentDay = paymentDay.getDay();
-        dto.sincePaymentDay = leader.getCreatedAt().toLocalDate();
         return dto;
     }
-
 }

@@ -52,7 +52,7 @@ public class ElderEntity {
     @Column(nullable = false)
     private String addressNumber;
 
-    @ManyToOne(targetEntity = ImgEntity.class, cascade = CascadeType.PERSIST)
+    @ManyToOne(targetEntity = ImgEntity.class, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "img_id")
     private ImgEntity img;
 

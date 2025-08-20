@@ -1,6 +1,7 @@
 package TheFirstCommit.demo.family.dto.response;
 
 import TheFirstCommit.demo.family.entity.ElderEntity;
+import TheFirstCommit.demo.img.ImgDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class ResponseElderDto {
     private String address;
     private String addressDetail;
     private String addressNumber;
-    private String img;
+    private ImgDto img;
 
     public static ResponseElderDto of(ElderEntity entity) {
         ResponseElderDto dto = new ResponseElderDto();
@@ -25,7 +26,7 @@ public class ResponseElderDto {
         dto.setAddress(entity.getAddress());
         dto.setAddressDetail(entity.getAddressDetail());
         dto.setAddressNumber(entity.getAddressNumber());
-        dto.setImg(entity.getImg().getCid());
+        dto.setImg(ImgDto.of(entity.getImg()));
         return dto;
     }
 }

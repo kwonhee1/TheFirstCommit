@@ -1,14 +1,13 @@
 package TheFirstCommit.demo.img;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
 @RequiredArgsConstructor
-public class ImgServiceImpl implements ImgService {
+public class ImgServiceILocal implements ImgService {
 
     private final ImgRepository imgRepository;
+
 
     @Override
     public ImgEntity getImg(String imgURL) {
@@ -17,16 +16,16 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public ImgEntity save(MultipartFile file) {
-        return ImgEntity.builder().cid("cid").build();
+        return ImgEntity.builder().cid("local").build();
     }
 
     @Override
-    public ImgEntity update(ImgEntity old, MultipartFile file) {
-        return old;
+    public void update(ImgEntity old, MultipartFile file) {
+        return;
     }
 
     @Override
     public void delete(ImgEntity img) {
-
+        imgRepository.delete(img);
     }
 }

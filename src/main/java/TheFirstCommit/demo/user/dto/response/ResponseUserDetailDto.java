@@ -1,5 +1,6 @@
 package TheFirstCommit.demo.user.dto.response;
 
+import TheFirstCommit.demo.img.ImgDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class ResponseUserDetailDto {
     private String relation;
     @JsonProperty("isLeader")
     private boolean isLeader;
-    private String img;
+    private ImgDto img;
 
     public static ResponseUserDetailDto of(UserEntity user) {
         ResponseUserDetailDto dto = new ResponseUserDetailDto();
@@ -28,7 +29,7 @@ public class ResponseUserDetailDto {
         dto.number = user.getNumber();
         dto.birth = user.getBirth();
         dto.isLeader = user.isLeader();
-        dto.img = user.getImg().getCid();
+        dto.img = ImgDto.of(user.getImg());
         dto.relation = user.getRelation();
         dto.socialProvider = user.getProvider();
         return dto;

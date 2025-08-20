@@ -2,7 +2,9 @@ package TheFirstCommit.demo.family.entity;
 
 import TheFirstCommit.demo.BasedEntity;
 import TheFirstCommit.demo.family.PaymentDay;
+import TheFirstCommit.demo.payment.entity.PaymentEntity;
 import TheFirstCommit.demo.user.entity.UserEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,8 +26,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "family")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
 public class FamilyEntity extends BasedEntity {
 
     @Id
@@ -39,10 +39,30 @@ public class FamilyEntity extends BasedEntity {
     @Column
     private String familyName;
 
-    @OneToOne(mappedBy = "family", targetEntity = ElderEntity.class)
+    @Column
+    private boolean isChanged = false;
+
+    @OneToOne(mappedBy = "family", targetEntity = ElderEntity.class, cascade = {CascadeType.REMOVE})
     private ElderEntity elder;
 
-    @OneToMany
+    @OneToMany(targetEntity = UserEntity.class, mappedBy = "family", cascade = {CascadeType.REMOVE})
     private List<UserEntity> member;
 
+    @OneToMany(targetEntity = PaymentEntity.class, mappedBy = "family", cascade = {CascadeType.REMOVE})
+    private List<PaymentEntity> payment;
+
+//    @OneToMany
+//    private List<NewsEntity>
+
+    public void setIsChanged(boolean isChanged) { this.isChanged = isChanged; }
+
+    @Builder
+    public FamilyEntity(ElderEntity elder, List<UserEntity> member, String familyName,
+        PaymentDay paymentDay, long id) {
+        this.elder = elder;
+        this.member = member;
+        this.familyName = familyName;
+        this.paymentDay = paymentDay;
+        this.id = id;
+    }
 }

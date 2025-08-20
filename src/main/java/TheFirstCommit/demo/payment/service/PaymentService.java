@@ -1,29 +1,27 @@
 package TheFirstCommit.demo.payment.service;
 
-import TheFirstCommit.demo.exception.CustomException;
-import TheFirstCommit.demo.exception.ErrorCode;
+import TheFirstCommit.demo.family.PaymentDay;
 import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.family.service.FamilyService;
-import TheFirstCommit.demo.payment.dto.CardInfoDto;
-import TheFirstCommit.demo.payment.dto.RequestSaveCardDto;
-import TheFirstCommit.demo.payment.dto.response.ResponseCardInfoDto;
+import TheFirstCommit.demo.payment.dto.response.ResponseNoCardDto;
+import TheFirstCommit.demo.payment.dto.response.ResponsePaymentInfoDto;
+import TheFirstCommit.demo.payment.dto.response.ResponsePaymentSummeryDto;
 import TheFirstCommit.demo.payment.entity.CardEntity;
 import TheFirstCommit.demo.payment.entity.PaymentEntity;
-import TheFirstCommit.demo.payment.repository.CardRepository;
 import TheFirstCommit.demo.payment.repository.PaymentRepository;
 import TheFirstCommit.demo.user.entity.UserEntity;
+import TheFirstCommit.demo.user.service.UserValidateService;
+import TheFirstCommit.demo.user.service.UserValidateServiceImpl;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class PaymentService {
 
+    private final UserValidateService userValidateService;
     @Value("${toss.secret}")
     private String TOSS_SECRET;
     @Value("${payment.price}")
@@ -108,4 +107,20 @@ public class PaymentService {
         return payment(cardService.getCard(user));
     }
 
+    @Transactional
+    public Object getFamilyPaymentDto(UserEntity user) {
+        UserEntity leader = userValidateService.findLeader(user);
+        Optional<CardEntity> cardOpt = cardService.getCardOpt(leader);
+        PaymentDay paymentDay = leader.getFamily().getPaymentDay();
+
+        if(cardOpt.isPresent())
+            return ResponsePaymentInfoDto.of(paymentDay, leader);
+        else
+            return new ResponseNoCardDto(MONTHLY_PAYMENT_PRICE);
+    }
+
+    public ResponsePaymentSummeryDto getFamilyPaymentSummeryDto(UserEntity user) {
+        UserEntity leader = userValidateService.findLeader(user);
+        return ResponsePaymentSummeryDto.of(!leader.getCard().isEmpty(), leader.getFamily().getPaymentDay());
+    }
 }
