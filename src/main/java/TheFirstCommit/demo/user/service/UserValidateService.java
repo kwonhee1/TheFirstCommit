@@ -1,12 +1,13 @@
 package TheFirstCommit.demo.user.service;
 
+import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import java.util.Optional;
 
 public interface UserValidateService {
 
     Optional<UserEntity> findById(Long userId);
-
-    Optional<UserEntity> findLeader(Long familyId);
+    public FamilyEntity getFamily(UserEntity user); // thorws Not_Found "family"
+    UserEntity findLeader(UserEntity user);
 
 }

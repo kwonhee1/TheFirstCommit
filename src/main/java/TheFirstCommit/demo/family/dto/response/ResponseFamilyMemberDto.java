@@ -1,5 +1,6 @@
 package TheFirstCommit.demo.family.dto.response;
 
+import TheFirstCommit.demo.family.dto.FamilyMemberDto;
 import TheFirstCommit.demo.family.entity.ElderEntity;
 import TheFirstCommit.demo.user.dto.response.ResponseUserProfileDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
@@ -16,15 +17,13 @@ public class ResponseFamilyMemberDto {
     private ResponseUserProfileDto leader;
     private List<ResponseUserProfileDto> members;
     private long memberCount;
-    private ResponseElderDto elder;
 
-    public static ResponseFamilyMemberDto of(UserEntity leader, List<UserEntity> members, ElderEntity elder) {
-        ResponseFamilyMemberDto dto = new ResponseFamilyMemberDto();
-        dto.leader = ResponseUserProfileDto.of(leader);
-        dto.members = members.stream().map(ResponseUserProfileDto::of).collect(Collectors.toList());
-        dto.memberCount = members.size();
-        dto.elder = ResponseElderDto.of(elder);
-        return dto;
+    public static ResponseFamilyMemberDto of(FamilyMemberDto dto) {
+        ResponseFamilyMemberDto response = new ResponseFamilyMemberDto();
+        response.leader = ResponseUserProfileDto.of(dto.getLeader());
+        response.members = dto.getMember().stream().map(ResponseUserProfileDto::of).collect(Collectors.toList());
+        response.memberCount = dto.getMember().size();
+        return response;
     }
 
 }
