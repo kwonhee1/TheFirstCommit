@@ -22,7 +22,7 @@ public class ResponseFamilyMemberDto {
         ResponseFamilyMemberDto response = new ResponseFamilyMemberDto();
         response.leader = ResponseUserProfileDto.of(dto.getLeader());
         response.members = dto.getMember().stream().map(ResponseUserProfileDto::of).collect(Collectors.toList());
-        response.memberCount = dto.getMember().size();
+        response.memberCount = dto.getMember().size() + 1; // leader 한명 포함
         return response;
     }
 

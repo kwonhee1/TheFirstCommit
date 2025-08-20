@@ -121,6 +121,6 @@ public class PaymentService {
 
     public ResponsePaymentSummeryDto getFamilyPaymentSummeryDto(UserEntity user) {
         UserEntity leader = userValidateService.findLeader(user);
-        return ResponsePaymentSummeryDto.of(leader.getCard() != null, leader.getFamily().getPaymentDay());
+        return ResponsePaymentSummeryDto.of(!leader.getCard().isEmpty(), leader.getFamily().getPaymentDay());
     }
 }

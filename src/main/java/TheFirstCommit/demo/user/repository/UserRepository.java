@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findBySocialId(String socialId);
 
-    @Query("select u from UserEntity u left join fetch u.family where u.family.id = (select u.family.id from UserEntity u2 where u2.id=:userId) and u.isLeader is true")
+    @Query("select u from UserEntity u left join fetch u.family where u.family.id = (select u2.family.id from UserEntity u2 where u2.id=:userId) and u.isLeader is true")
     Optional<UserEntity> findLeader(@Param("userId") Long userId);
 
     @Query("select u.family from UserEntity u where u.id = :id")

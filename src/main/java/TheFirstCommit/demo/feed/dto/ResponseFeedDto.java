@@ -2,7 +2,7 @@ package TheFirstCommit.demo.feed.dto;
 
 import TheFirstCommit.demo.feed.entity.FeedEntity;
 import TheFirstCommit.demo.img.ImgEntity;
-import TheFirstCommit.demo.imgFeed.ImgFeedEntity;
+import TheFirstCommit.demo.feed.entity.ImgFeedEntity;
 import TheFirstCommit.demo.user.dto.response.ResponseUserProfileDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,6 +17,7 @@ import lombok.Setter;
 @Getter
 public class ResponseFeedDto {
 
+    private Long id;
     private List<String> imgs;
     private String text;
 
@@ -27,8 +28,10 @@ public class ResponseFeedDto {
 
     private LocalDateTime createAt;
 
-    public static ResponseFeedDto of(FeedEntity feed, UserEntity author) {
+    public static ResponseFeedDto of(FeedEntity feed) {
+        UserEntity author = feed.getUser();
         ResponseFeedDto dto = new ResponseFeedDto();
+        dto.id = feed.getId();
         dto.text = feed.getText();
         dto.createAt = feed.getCreatedAt();
         dto.isAuthor = author.getId() == feed.getUser().getId();

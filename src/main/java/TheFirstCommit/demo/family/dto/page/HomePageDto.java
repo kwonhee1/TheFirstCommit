@@ -1,11 +1,9 @@
-package TheFirstCommit.demo.family.dto.response;
+package TheFirstCommit.demo.family.dto.page;
 
+import TheFirstCommit.demo.family.dto.response.ResponseFamilyDto;
 import TheFirstCommit.demo.feed.dto.ResponseFeedDto;
 import TheFirstCommit.demo.payment.dto.response.ResponsePaymentSummeryDto;
-import TheFirstCommit.demo.user.entity.UserEntity;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

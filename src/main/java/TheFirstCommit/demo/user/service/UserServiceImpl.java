@@ -46,6 +46,8 @@ public class UserServiceImpl implements UserService {
 
         user.update(dto);
 
+        log.info(user.getImg().toString());
+
         userRepository.save(user);
     }
 

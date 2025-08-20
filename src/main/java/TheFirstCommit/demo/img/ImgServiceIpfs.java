@@ -5,8 +5,11 @@ import TheFirstCommit.demo.exception.ErrorCode;
 import io.ipfs.api.IPFS;
 import io.ipfs.api.NamedStreamable;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 public class ImgServiceIpfs implements ImgService {
 
     private final ImgRepository imgRepository;
@@ -21,16 +24,19 @@ public class ImgServiceIpfs implements ImgService {
     }
 
     @Override
+    @Transactional
     public ImgEntity getImg(String imgURL) {
         return null;
     }
 
     @Override
+    @Transactional
     public ImgEntity save(MultipartFile file) {
         String cid;
         try {
             NamedStreamable streamable = new NamedStreamable.ByteArrayWrapper(file.getBytes());
             cid = ipfs.add(streamable).get(0).hash.toString();
+            log.info("ipfs :: save " + cid);
         } catch (IOException e) {
             throw new CustomException(ErrorCode.SAVE_FAIL);
         }
@@ -38,9 +44,12 @@ public class ImgServiceIpfs implements ImgService {
     }
 
     @Override
+    @Transactional
     public void update(ImgEntity old, MultipartFile file) {
         try {
-            ipfs.pin.rm(io.ipfs.multihash.Multihash.fromBase58(old.getCid()));
+            if(old.getCid() != null)
+                ipfs.pin.rm(io.ipfs.multihash.Multihash.fromBase58(old.getCid()));
+            log.info("ipfs :: remove " + old.getId() + "," + old.getCid());
         } catch (IOException e) {
             throw new CustomException(ErrorCode.REMOVE_FAIL);
         }
@@ -49,6 +58,7 @@ public class ImgServiceIpfs implements ImgService {
         try {
             NamedStreamable streamable = new NamedStreamable.ByteArrayWrapper(file.getBytes());
             cid = ipfs.add(streamable).get(0).hash.toString();
+            log.info("ipfs :: save " + cid);
         } catch (IOException e) {
             throw new CustomException(ErrorCode.SAVE_FAIL);
         }
@@ -57,9 +67,12 @@ public class ImgServiceIpfs implements ImgService {
     }
 
     @Override
+    @Transactional
     public void delete(ImgEntity img) {
         try {
-            ipfs.pin.rm(io.ipfs.multihash.Multihash.fromBase58(img.getCid()));
+            if(img.getCid() != null)
+                ipfs.pin.rm(io.ipfs.multihash.Multihash.fromBase58(img.getCid()));
+            log.info("ipfs :: remove " + img.getId() + "," + img.getCid());
         } catch (IOException e) {
             throw new CustomException(ErrorCode.REMOVE_FAIL);
         }

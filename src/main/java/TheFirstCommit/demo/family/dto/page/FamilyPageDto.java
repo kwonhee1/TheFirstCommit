@@ -1,5 +1,7 @@
-package TheFirstCommit.demo.family.dto.response;
+package TheFirstCommit.demo.family.dto.page;
 
+import TheFirstCommit.demo.family.dto.response.ResponseElderDto;
+import TheFirstCommit.demo.family.dto.response.ResponseFamilyMemberDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

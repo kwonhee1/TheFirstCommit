@@ -1,6 +1,9 @@
 package TheFirstCommit.demo.feed.service;
 
+import TheFirstCommit.demo.exception.CustomException;
+import TheFirstCommit.demo.exception.ErrorCode;
 import TheFirstCommit.demo.family.entity.FamilyEntity;
+import TheFirstCommit.demo.family.service.FamilyService;
 import TheFirstCommit.demo.feed.dto.CreateFeedRequestDto;
 import TheFirstCommit.demo.feed.dto.ResponseFeedDto;
 import TheFirstCommit.demo.feed.dto.UpdateFeedRequestDto;
@@ -10,7 +13,9 @@ import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
 import TheFirstCommit.demo.feed.entity.ImgFeedEntity;
 import TheFirstCommit.demo.feed.repository.ImgFeedRepository;
+import TheFirstCommit.demo.payment.service.CardService;
 import TheFirstCommit.demo.user.entity.UserEntity;
+import TheFirstCommit.demo.user.service.UserValidateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +30,25 @@ public class FeedServiceImpl implements FeedService {
     private final FeedRepository feedRepository;
     private final ImgService imgService;
     private final ImgFeedRepository imgFeedRepository;
+    private final UserValidateService userValidateService;
+    private final CardService cardService;
 
     @Override
     @Transactional
-    public void createFeed(CreateFeedRequestDto requestDto, List<MultipartFile> imageFiles, UserEntity user) {
+    public void createFeed(CreateFeedRequestDto requestDto, UserEntity user) {
+        List<MultipartFile> imageFiles = requestDto.getImageFiles();
+        FamilyEntity family = userValidateService.getFamily(user);
+
+        if(getFeedCountByFamily(family) >= 3 && cardService.getCardOpt(userValidateService.findLeader(user)).isEmpty()){
+            throw new CustomException(ErrorCode.NOT_EXIST_CARD);
+        }
+
         // 1. 피드 텍스트 내용 저장
         FeedEntity feed = FeedEntity.builder()
                 .text(requestDto.getText())
                 .layout(requestDto.getLayout())
                 .user(user)
-                .family(user.getFamily()) // 사용자가 속한 가족 정보로 피드 저장
+                .family(family)
                 .build();
         feedRepository.save(feed);
 
@@ -55,9 +69,11 @@ public class FeedServiceImpl implements FeedService {
             }
         }
     }
+
     @Override
     @Transactional
-    public void updateFeed(Long feedId, UpdateFeedRequestDto requestDto, List<MultipartFile> addImageFiles, UserEntity user) {
+    public void updateFeed(Long feedId, UpdateFeedRequestDto requestDto, UserEntity user) {
+        List<MultipartFile> addImageFiles = requestDto.getImageFiles();
         // 1. 피드 조회 및 작성자 확인
         FeedEntity feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new RuntimeException("피드를 찾을 수 없습니다.")); // CustomException으로 변경 권장
@@ -112,12 +128,13 @@ public class FeedServiceImpl implements FeedService {
         feedRepository.delete(feed);
     }
 
+    @Override
     public List<ResponseFeedDto> getFeedDtoList(FamilyEntity family){
         List<FeedEntity> feedList = feedRepository.findByFamily(family.getId());
         return feedList.stream().map(ResponseFeedDto::of).toList();
     }
 
-    public Long getFeedCountByFamily(FamilyEntity family){
+    private Long getFeedCountByFamily(FamilyEntity family){
         return feedRepository.countByFamily(family.getId());
     }
 }

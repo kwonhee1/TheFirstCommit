@@ -6,6 +6,7 @@ import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.payment.entity.CardEntity;
 import TheFirstCommit.demo.user.dto.request.RequestUpdateUserInfoDto;
 import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -52,7 +54,7 @@ public class UserEntity extends BasedEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.SOCIAL;
 
-    @OneToOne(targetEntity = FamilyEntity.class)
+    @ManyToOne(targetEntity = FamilyEntity.class)
     @JoinColumn(name = "family_id", nullable = true)
     private FamilyEntity family;
 
@@ -62,7 +64,7 @@ public class UserEntity extends BasedEntity {
     @Column
     private String relation;
 
-    @OneToOne(targetEntity = ImgEntity.class)
+    @OneToOne(targetEntity = ImgEntity.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "img_id", nullable = true)
     private ImgEntity img;
 

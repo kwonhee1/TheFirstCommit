@@ -65,6 +65,8 @@ public class NaverService {
     public Map<String, String> getUserInfo(String accessToken) {
         return WebClient.create(UserInfoURI).post()
             .uri(uriBuilder -> uriBuilder
+                .queryParam("client_id", ClientId)
+                .queryParam("client_secret", ClientSecret)
                 .build(true))
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .retrieve()

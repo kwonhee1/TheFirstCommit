@@ -13,7 +13,7 @@ public interface FeedRepository extends JpaRepository<FeedEntity, Long> {
     @Query("select count(*) from FeedEntity f where f.family.id = :id")
     Long countByFamily(@Param("id") Long familyId);
 
-    @Query("select f from FeedEntity f where f.family.id = :familyId order by f.createdAt desc")
+    @Query("select f from FeedEntity f left join fetch f.user where f.family.id = :familyId order by f.createdAt desc")
     List<FeedEntity> findByFamily(@Param("familyId") Long familyId);
 
 }

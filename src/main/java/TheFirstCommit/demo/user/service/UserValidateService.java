@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface UserValidateService {
 
     Optional<UserEntity> findById(Long userId);
-    public FamilyEntity getFamily(UserEntity user); // thorws Not_Found "family"
+    FamilyEntity getFamily(UserEntity user); // thorws Not_Found "family"
     UserEntity findLeader(UserEntity user);
 
 }

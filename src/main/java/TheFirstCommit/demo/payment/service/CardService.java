@@ -107,7 +107,7 @@ public class CardService {
         return cards.stream().findFirst().get();
     }
 
-    protected Optional<CardEntity> getCardOpt(UserEntity user) {
+    public Optional<CardEntity> getCardOpt(UserEntity user) {
         return cardRepository.findAllByUserId(user.getId()).stream().findFirst();
     }
 
