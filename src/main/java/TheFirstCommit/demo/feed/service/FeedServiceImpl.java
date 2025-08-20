@@ -1,13 +1,15 @@
 package TheFirstCommit.demo.feed.service;
 
+import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.feed.dto.CreateFeedRequestDto;
+import TheFirstCommit.demo.feed.dto.ResponseFeedDto;
 import TheFirstCommit.demo.feed.dto.UpdateFeedRequestDto;
 import TheFirstCommit.demo.feed.entity.FeedEntity;
 import TheFirstCommit.demo.feed.repository.FeedRepository;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
-import TheFirstCommit.demo.imgFeed.ImgFeedEntity;
-import TheFirstCommit.demo.imgFeed.ImgFeedRepository;
+import TheFirstCommit.demo.feed.entity.ImgFeedEntity;
+import TheFirstCommit.demo.feed.repository.ImgFeedRepository;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -108,5 +110,14 @@ public class FeedServiceImpl implements FeedService {
         }
 
         feedRepository.delete(feed);
+    }
+
+    public List<ResponseFeedDto> getFeedDtoList(FamilyEntity family){
+        List<FeedEntity> feedList = feedRepository.findByFamily(family.getId());
+        return feedList.stream().map(ResponseFeedDto::of).toList();
+    }
+
+    public Long getFeedCountByFamily(FamilyEntity family){
+        return feedRepository.countByFamily(family.getId());
     }
 }

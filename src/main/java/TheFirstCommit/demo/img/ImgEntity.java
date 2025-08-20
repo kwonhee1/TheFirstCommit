@@ -25,4 +25,8 @@ public class ImgEntity {
 
     @Column
     private String cid;
+
+    public void updateCid(String cid) {
+        this.cid = cid;
+    }
 }

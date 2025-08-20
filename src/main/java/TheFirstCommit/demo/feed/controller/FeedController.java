@@ -33,9 +33,10 @@ public class FeedController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new SuccessResponse("Feed created successfully.", null));
     }
-    @PatchMapping(value = "/{feedId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PatchMapping("/{feedId}") // <-- 수정은 PatchMapping이 맞습니다.
     public ResponseEntity<?> updateFeed(
-            @PathVariable Long feedId,
+            // 여기에도 ("feedId")를 명시해주어야 합니다.
+            @PathVariable("feedId") Long feedId,
             @AuthenticationPrincipal UserEntity user,
             @RequestPart("request") UpdateFeedRequestDto requestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> addImageFiles) {
@@ -45,7 +46,7 @@ public class FeedController {
         return ResponseEntity.ok(new SuccessResponse("Feed updated successfully.", null));
     }
     @DeleteMapping("/{feedId}")
-    public ResponseEntity<?> deleteFeed(@PathVariable Long feedId,
+    public ResponseEntity<?> deleteFeed(@PathVariable("feedId") Long feedId, // <-- ("feedId") 추가
                                         @AuthenticationPrincipal UserEntity user){
         feedService.deleteFeed(feedId, user);
         return ResponseEntity.ok(new SuccessResponse("Feed deleted successfully.",null));

@@ -46,12 +46,16 @@ dependencies {
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
 
-	//IPFS
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	//ipfs
+	implementation 'com.github.ipfs:java-ipfs-http-client:1.4.4'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+repositories {
+	maven { url 'https://jitpack.io' }
 }
 
 tasks.named('test') {
