@@ -17,6 +17,7 @@ import TheFirstCommit.demo.img.ImgService;
 import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
+import TheFirstCommit.demo.user.service.UserValidateService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,8 @@ public class FamilyService {
 
     private final FamilyRepository familyRepository;
     private final ElderRepository elderRepository;
-    private final UserService userService;
     private final ImgService imgService;
+    private final UserValidateService userValidateService;
 
     public void save(UserEntity user, RequestNewFamilyDto familyDto, RequestElderDto elderDto, MultipartFile elderImgFile) {
         if(user.getFamily() != null)
@@ -39,7 +40,7 @@ public class FamilyService {
         ImgEntity imgEntity = imgService.save(elderImgFile);
         FamilyEntity family = familyRepository.save(familyDto.toFamilyEntity());
         elderRepository.save(elderDto.toEntity(family, imgEntity));
-        userService.updateUserFamily(user, new UpdateUserFamilyDto(family, familyDto.getRelation(), true));
+        userValidateService.updateUserFamily(user, new UpdateUserFamilyDto(family, familyDto.getRelation(), true));
     }
 
     // elder 정보 수정 (leader 만 가능!)
@@ -66,7 +67,11 @@ public class FamilyService {
     // join with family code
     public void joinFamily(UserEntity user, RequestJoinFamilyDto dto) {
         FamilyEntity family = getFamilyByCode(dto.getFamilyCode()).orElseThrow(()->{return new CustomException(ErrorCode.NOT_FOUND, "family");});
-        userService.updateUserFamily(user, new UpdateUserFamilyDto(family, dto.getRelation(), false));
+        userValidateService.updateUserFamily(user, new UpdateUserFamilyDto(family, dto.getRelation(), false));
+    }
+
+    public void deleteFamily(FamilyEntity family) {
+        familyRepository.delete(family);
     }
 
     ///  get dtos

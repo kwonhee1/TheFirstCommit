@@ -9,6 +9,7 @@ import TheFirstCommit.demo.payment.entity.CardEntity;
 import TheFirstCommit.demo.payment.repository.CardRepository;
 import TheFirstCommit.demo.payment.repository.PaymentRepository;
 import TheFirstCommit.demo.user.entity.UserEntity;
+import TheFirstCommit.demo.user.service.UserValidateService;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,8 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequiredArgsConstructor
 public class CardService {
+
+    private final UserValidateService userValidateService;
     @Value("${toss.secret}")
     private String TOSS_SECRET;
 
@@ -50,6 +53,9 @@ public class CardService {
                 .user(user)
                 .build()
         );
+
+        userValidateService.getFamily(user).setIsChanged(false);
+
         log.info("Card saved " + user.getId() + ", " + user.getName());
         return cardInfo;
     }

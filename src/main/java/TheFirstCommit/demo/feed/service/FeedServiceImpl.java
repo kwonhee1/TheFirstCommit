@@ -3,7 +3,6 @@ package TheFirstCommit.demo.feed.service;
 import TheFirstCommit.demo.exception.CustomException;
 import TheFirstCommit.demo.exception.ErrorCode;
 import TheFirstCommit.demo.family.entity.FamilyEntity;
-import TheFirstCommit.demo.family.service.FamilyService;
 import TheFirstCommit.demo.feed.dto.CreateFeedRequestDto;
 import TheFirstCommit.demo.feed.dto.ResponseFeedDto;
 import TheFirstCommit.demo.feed.dto.UpdateFeedRequestDto;
@@ -39,9 +38,7 @@ public class FeedServiceImpl implements FeedService {
         List<MultipartFile> imageFiles = requestDto.getImageFiles();
         FamilyEntity family = userValidateService.getFamily(user);
 
-        if(getFeedCountByFamily(family) >= 3 && cardService.getCardOpt(userValidateService.findLeader(user)).isEmpty()){
-            throw new CustomException(ErrorCode.NOT_EXIST_CARD);
-        }
+        canFeed(user); // check can feed
 
         // 1. 피드 텍스트 내용 저장
         FeedEntity feed = FeedEntity.builder()
@@ -76,10 +73,10 @@ public class FeedServiceImpl implements FeedService {
         List<MultipartFile> addImageFiles = requestDto.getImageFiles();
         // 1. 피드 조회 및 작성자 확인
         FeedEntity feed = feedRepository.findById(feedId)
-                .orElseThrow(() -> new RuntimeException("피드를 찾을 수 없습니다.")); // CustomException으로 변경 권장
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "feed") );
 
         if (feed.getUser().getId() != user.getId()) {
-            throw new RuntimeException("수정 권한이 없습니다."); // CustomException으로 변경 권장
+            new CustomException(ErrorCode.NOT_AUTHOR); // CustomException으로 변경 권장
         }
 
         // 2. 텍스트 정보 업데이트 (요청에 값이 있을 경우에만 변경)
@@ -114,10 +111,10 @@ public class FeedServiceImpl implements FeedService {
     @Transactional
     public void deleteFeed(Long feedId, UserEntity user){
         FeedEntity feed = feedRepository.findById(feedId)
-                .orElseThrow(() -> new RuntimeException("피드를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND, "feed"));
 
         if (feed.getUser().getId() != user.getId()){
-            throw new RuntimeException("삭제 권한이 없습니다.");
+            throw new CustomException(ErrorCode.NOT_AUTHOR);
         }
 
         List<ImgFeedEntity> imgFeedsToDelete = List.copyOf(feed.getImgFeeds());
@@ -126,6 +123,21 @@ public class FeedServiceImpl implements FeedService {
         }
 
         feedRepository.delete(feed);
+    }
+
+    @Override
+    public void canFeed(UserEntity user) {
+        FamilyEntity family = userValidateService.getFamily(user);
+
+        if(family.isChanged() && user.isLeader())
+            throw new CustomException(ErrorCode.NEW_LEADER);
+
+        if(family.isChanged())
+            throw new CustomException(ErrorCode.LEADER_CHANGED);
+
+        if(getFeedCountByFamily(family) >= 3 && cardService.getCardOpt(userValidateService.findLeader(user)).isEmpty()){
+            throw new CustomException(ErrorCode.NOT_EXIST_CARD);
+        }
     }
 
     @Override

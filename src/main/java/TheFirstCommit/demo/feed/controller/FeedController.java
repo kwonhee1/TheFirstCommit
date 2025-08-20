@@ -22,6 +22,12 @@ public class FeedController {
 
     private final FeedService feedService;
 
+    @GetMapping
+    public ResponseEntity canFeed(@AuthenticationPrincipal UserEntity user) {
+        feedService.canFeed(user);
+        return ResponseEntity.ok(new SuccessResponse("can feed", null));
+    }
+
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> createFeed(
             @AuthenticationPrincipal UserEntity user,
@@ -44,6 +50,7 @@ public class FeedController {
 
         return ResponseEntity.ok(new SuccessResponse("Feed updated successfully.", null));
     }
+
     @DeleteMapping("/{feedId}")
     public ResponseEntity<?> deleteFeed(@PathVariable("feedId") Long feedId,
                                         @AuthenticationPrincipal UserEntity user){

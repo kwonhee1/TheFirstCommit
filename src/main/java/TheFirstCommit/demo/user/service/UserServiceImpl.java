@@ -1,5 +1,10 @@
 package TheFirstCommit.demo.user.service;
 
+import TheFirstCommit.demo.exception.CustomException;
+import TheFirstCommit.demo.exception.ErrorCode;
+import TheFirstCommit.demo.family.dto.response.ResponseFamilyDto;
+import TheFirstCommit.demo.family.entity.FamilyEntity;
+import TheFirstCommit.demo.family.service.FamilyService;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
 import TheFirstCommit.demo.user.dto.request.RequestUpdateUserInfoDto;
@@ -19,6 +24,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ImgService imgService;
+    private final UserValidateService userValidateService;
+    private final FamilyService familyService;
 
     @Override
     public UserEntity login(String socialId, RegisterDto dto) {
@@ -51,13 +58,29 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    public void updateUserFamily(UserEntity user, UpdateUserFamilyDto dto) {
-        user.update(dto);
-        userRepository.save(user);
+    @Override
+    @Transactional
+    public void delete(UserEntity user, Long nextLeaderUserId) {
+        if(nextLeaderUserId == null) {
+            deleteAll(user);
+            return;
+        }
+
+        UserEntity nextLeader = userRepository.findById(nextLeaderUserId).orElseThrow();
+        nextLeader.updateLeader();
+        userValidateService.getFamily(user).setIsChanged(true);
+
+        userRepository.delete(user);
+        userRepository.save(nextLeader);
     }
 
-    @Override
-    public void delete(UserEntity user) {
-        // not yet
+    @Transactional
+    public void deleteAll(UserEntity user) {
+        ResponseFamilyDto dto = familyService.getFamilyDto(user);
+        if(dto.getMemberCount() >= 2)
+            throw new CustomException(ErrorCode.CHOOSE_NEXT_LEADER);
+
+        familyService.deleteFamily(userValidateService.getFamily(user));
+        userRepository.delete(user);
     }
 }

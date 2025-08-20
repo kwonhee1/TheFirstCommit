@@ -1,6 +1,7 @@
 package TheFirstCommit.demo.feed.dto;
 
 import TheFirstCommit.demo.feed.entity.FeedEntity;
+import TheFirstCommit.demo.img.ImgDto;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.feed.entity.ImgFeedEntity;
 import TheFirstCommit.demo.user.dto.response.ResponseUserProfileDto;
@@ -18,7 +19,7 @@ import lombok.Setter;
 public class ResponseFeedDto {
 
     private Long id;
-    private List<String> imgs;
+    private List<ImgDto> imgs;
     private String text;
 
     @JsonProperty("author")
@@ -38,7 +39,7 @@ public class ResponseFeedDto {
         dto.author = ResponseUserProfileDto.of(author);
         dto.imgs = feed.getImgFeeds().stream()
                         .map(ImgFeedEntity::getImg)
-                        .map(ImgEntity::getCid)
+                        .map(ImgDto::of)
                         .toList();
         return dto;
     }

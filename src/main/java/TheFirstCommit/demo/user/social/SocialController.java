@@ -5,9 +5,11 @@ import TheFirstCommit.demo.config.security.util.JWTUtil;
 import TheFirstCommit.demo.exception.CustomException;
 import TheFirstCommit.demo.exception.ErrorCode;
 import TheFirstCommit.demo.user.dto.response.ResponseTokenDto;
+import TheFirstCommit.demo.user.dto.response.ResponseUserDetailDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,24 +80,28 @@ public class SocialController {
     @PostMapping("/google")
     public ResponseEntity google(@RequestBody SocialDto dto) {
         UserEntity user = googleService.socialLogin(dto.getCode());
-        return response(user.getId());
+        return response(user);
     }
 
     @PostMapping("/kakao")
     public ResponseEntity kakao(@RequestBody SocialDto dto) {
         UserEntity user = kakaoService.socialLogin(dto.getCode());
-        return response(user.getId());
+        return response(user);
     }
 
     @PostMapping("/naver")
     public ResponseEntity naver(@RequestBody SocialDto dto) {
         UserEntity user = naverService.socialLoin(dto.getCode());
-        return response(user.getId());
+        return response(user);
     }
 
-    private ResponseEntity response(Long userId) {
-        String access = JWTUtil.generateAccessToken(userId);
-        String refresh = JWTUtil.generateRefreshToken(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", ResponseTokenDto.all(access, refresh) ));
+    private ResponseEntity response(UserEntity user) {
+        String access = JWTUtil.generateAccessToken(user.getId());
+        String refresh = JWTUtil.generateRefreshToken(user.getId());
+
+        ResponseTokenDto tokenDto = ResponseTokenDto.all(access, refresh);
+        ResponseUserDetailDto userDetailDto = ResponseUserDetailDto.of(user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", Map.of("token", tokenDto, "user", userDetailDto) ));
     }
 }

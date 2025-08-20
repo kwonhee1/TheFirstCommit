@@ -13,4 +13,5 @@ public interface FeedService {
     void updateFeed(Long feedId, UpdateFeedRequestDto requestDto, UserEntity user);
     void deleteFeed(Long feedId, UserEntity user);
     List<ResponseFeedDto> getFeedDtoList(FamilyEntity family);
+    void canFeed(UserEntity user);
 }

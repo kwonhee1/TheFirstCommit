@@ -14,8 +14,6 @@ public interface UserService {
     void update(UserEntity user, RequestUpdateUserInfoDto dto);
 
     // delete
-    void delete(UserEntity user);
-    
-    void updateUserFamily(UserEntity user, UpdateUserFamilyDto dto);
+    void delete(UserEntity user, Long nextLeaderUserId);
 
 }

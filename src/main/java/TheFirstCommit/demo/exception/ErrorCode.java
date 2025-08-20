@@ -22,8 +22,14 @@ public enum ErrorCode {
     SAVE_FAIL(HttpStatus.BAD_REQUEST, "30001", "save fail"),
     REMOVE_FAIL(HttpStatus.BAD_REQUEST, "30002", "remove fail"),
 
+    // feed 관련
+    NEW_LEADER(HttpStatus.BAD_REQUEST, "40001", "new leader"),
+    LEADER_CHANGED(HttpStatus.BAD_REQUEST, "40002", "leader changed"),
+    NOT_AUTHOR(HttpStatus.BAD_REQUEST, "40003", "not author"),
+
     // family 관련 500??
     NOT_LEADER(HttpStatus.BAD_REQUEST, "50001", "not leader"),
+    CHOOSE_NEXT_LEADER(HttpStatus.BAD_REQUEST, "50002", "choose next leader"),
     ;
 
     public HttpStatus statusCode;
