@@ -1,6 +1,7 @@
 package TheFirstCommit.demo.news.entity;
 
 import TheFirstCommit.demo.family.entity.FamilyEntity;
+import TheFirstCommit.demo.img.ImgEntity; // ImgEntity 임포트
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "news")
@@ -25,8 +24,10 @@ public class NewsEntity {
     @JoinColumn(name = "family_id")
     private FamilyEntity family;
 
-    @Column
-    private String pdfCid; // 다운로드용 원본 PDF의 CID
+    // ImgEntity와 1:1 관계 설정
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "img_id")
+    private ImgEntity img; // PDF 파일 정보를 담는 ImgEntity
 
     @Column(nullable = false)
     private LocalDate publishedAt;
@@ -34,19 +35,13 @@ public class NewsEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("pageNumber ASC")
-    private List<NewsImgEntity> newsImgs = new ArrayList<>();
-
     @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+    protected void onCreate() { this.createdAt = LocalDateTime.now(); }
 
     @Builder
-    public NewsEntity(FamilyEntity family, String pdfCid, LocalDate publishedAt) {
+    public NewsEntity(FamilyEntity family, ImgEntity img, LocalDate publishedAt) {
         this.family = family;
-        this.pdfCid = pdfCid;
+        this.img = img;
         this.publishedAt = publishedAt;
     }
 }
