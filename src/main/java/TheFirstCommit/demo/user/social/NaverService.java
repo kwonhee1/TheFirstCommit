@@ -38,7 +38,7 @@ public class NaverService {
             //.email(info.get("email"))
             .name(info.get("name"))
             .number(info.get("mobile"))
-            // .birth()
+            .birth(info.get("birthyear") + "-" + info.get("birthday"))
             //.nickName(info.get("nickname"))
             .imgURL(info.get("profile_image"))
             .build()
@@ -78,7 +78,7 @@ public class NaverService {
                 return (Map<String, String>) response.get("response");
             })
             .block();
-        response1.values().forEach(System.out::println);
+        //System.out.println(response1);
         return response1;
     }
 }

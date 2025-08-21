@@ -88,7 +88,7 @@ public class GoogleService {
             .bodyToMono(Map.class)
             .block();
 
-        response1.values().forEach(System.out::println);
+        //System.out.println(response1);
         return response1;
     }
 }

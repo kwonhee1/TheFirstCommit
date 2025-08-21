@@ -38,12 +38,39 @@ public class KakaoService {
             .socialId( String.valueOf(info.get("id")))
             //.nickName( (String) ((Map<String, Object>)info.get("properties")).get("nickname") )
             .name((String) ((Map<String, Object>)info.get("kakao_account")).get("name"))
-            .number((String) ((Map<String, Object>)info.get("kakao_account")).get("phone"))
-            // .birth()
+            .number( numberFormat( (String) ((Map<String, Object>)info.get("kakao_account")).get("phone_number") ) )
+            .birth(formatBirthday( (String) ((Map<String, Object>)info.get("kakao_account")).get("birthyear"), (String) ((Map<String, Object>)info.get("kakao_account")).get("birthday")))
             //.email( (String) ((Map<String, Object>)info.get("kakao_account")).get("email") )
-            .imgURL((String) ((Map<String, Object>)info.get("properties")).get("profile_image"))
+            .imgURL( (String) ((Map<String, Object>)info.get("properties")).get("profile_image") )
             .build()
         );
+    }
+
+    private String numberFormat(String input) {
+        if(input == null || input.isEmpty())
+            return null;
+        String digits = input.replaceAll("[^0-9]", "");
+        if (digits.startsWith("82")) {
+            digits = digits.substring(2);
+        }
+        if (!digits.startsWith("0")) {
+            digits = "0" + digits;
+        }
+        if (digits.length() == 11) {
+            return digits.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
+        } else if (digits.length() == 10) {
+            return digits.replaceFirst("(\\d{2,3})(\\d{3,4})(\\d{4})", "$1-$2-$3");
+        }
+        return digits;
+    }
+
+    private String formatBirthday(String year, String monthDay) {
+        if (year == null || monthDay == null || monthDay.length() != 4) {
+            return null;
+        }
+        String month = monthDay.substring(0, 2);
+        String day = monthDay.substring(2, 4);
+        return String.format("%s-%s-%s", year, month, day);
     }
 
     public Map<String, Object> getUserFromKakao(String code) {
@@ -79,7 +106,7 @@ public class KakaoService {
             .bodyToMono(Map.class)
             .block();
 
-        System.out.println(response);
+        //System.out.println(response);
         return response;
     }
 }
