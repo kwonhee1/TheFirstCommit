@@ -1,9 +1,9 @@
 package TheFirstCommit.demo.news.service;
 
 import TheFirstCommit.demo.family.entity.FamilyEntity;
+import TheFirstCommit.demo.news.entity.DeliveryStatus;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
-import TheFirstCommit.demo.news.entity.DeliveryStatus;
 import TheFirstCommit.demo.news.entity.NewsEntity;
 import TheFirstCommit.demo.news.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class NewsServiceImpl implements NewsService {
                 .family(family)
                 .img(pdfImgEntity)
                 .publishedAt(LocalDate.now())
-                .deliveryStatus(DeliveryStatus.COMPLETED_PRODUCTION)
+                .deliveryStatus(DeliveryStatus.COMPLETED_PRODUCTION) // ★★★ 초기 상태를 '제작 완료'로 지정 ★★★
                 .build();
         newsRepository.save(news);
     }

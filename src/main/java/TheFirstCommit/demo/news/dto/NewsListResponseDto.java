@@ -9,11 +9,13 @@ import java.time.LocalDate;
 public class NewsListResponseDto {
     private final Long newsId;
     private final LocalDate publishedAt;
-    private final String cid; // 필드 이름을 pdfCid에서 cid로 변경하는 것이 더 명확
+    private final String cid;
+    private final String deliveryStatus;
 
     public NewsListResponseDto(NewsEntity news) {
         this.newsId = news.getId();
         this.publishedAt = news.getPublishedAt();
         this.cid = news.getImg().getCid();
+        this.deliveryStatus = news.getDeliveryStatus().getDescription();
     }
 }
