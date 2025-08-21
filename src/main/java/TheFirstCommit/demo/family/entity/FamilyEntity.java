@@ -36,9 +36,11 @@ public class FamilyEntity extends BasedEntity {
     @GeneratedValue
     private long id;
 
-    @Column(nullable = false)
+    @Column
     @Enumerated(EnumType.STRING)
     private PaymentDay paymentDay;
+
+    public void updatePaymentDay(PaymentDay paymentDay) { this.paymentDay = paymentDay; }
 
     @Column
     private String familyName;

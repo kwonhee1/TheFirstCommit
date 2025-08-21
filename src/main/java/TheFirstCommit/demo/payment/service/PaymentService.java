@@ -175,6 +175,8 @@ public class PaymentService {
                 familyOpt.get().payNow();
                 payment(newCard, familyOpt.get());
             }
+            if(familyOpt.get().getPaymentDay() == null) 
+                familyOpt.get().updatePaymentDay(dto.getPaymentDay());
         }
 
         log.info("Card saved " + user.getId() + ", " + user.getName());
