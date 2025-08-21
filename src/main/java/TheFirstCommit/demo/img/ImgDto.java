@@ -14,10 +14,17 @@ public class ImgDto {
     public static ImgDto of(ImgEntity img) {
         ImgDto dto = new ImgDto();
         if(img == null) {
-            return dto;
+            return defaultImg();
         }
         dto.id = img.getId();
         dto.cid = img.getCid();
+        return dto;
+    }
+
+    private static ImgDto defaultImg() {
+        ImgDto dto = new ImgDto();
+        dto.cid = "기본이미지 url 추후 수정";
+        dto.id = 0L;
         return dto;
     }
 }

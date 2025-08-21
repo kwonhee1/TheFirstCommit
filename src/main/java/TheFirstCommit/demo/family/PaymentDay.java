@@ -8,23 +8,39 @@ public enum PaymentDay {
     SECOND_SUNDAY,
     FOURTH_SUNDAY;
 
-    public LocalDate getDay() {
+    public LocalDate beforeFeedDay() {
         LocalDate now = LocalDate.now();
         YearMonth currentMonth = YearMonth.from(now);
 
-        LocalDate date = getDay(currentMonth);
+        LocalDate date = feedDay(currentMonth);
 
-        if(date.isAfter(now)) {
+        if (date.isBefore(now) || date.isEqual(now)) {
             return date;
         } else {
-            return getDay(currentMonth.plusMonths(1));
+            return feedDay(currentMonth.minusMonths(1));
         }
     }
 
-    private LocalDate getDay(YearMonth yearMonth) {
-        if(this == SECOND_SUNDAY)
-            return yearMonth.atDay(1).with(java.time.temporal.TemporalAdjusters.dayOfWeekInMonth(2, DayOfWeek.SUNDAY));
-        else
-            return yearMonth.atDay(1).with(java.time.temporal.TemporalAdjusters.dayOfWeekInMonth(4, DayOfWeek.SUNDAY));
+    public LocalDate nextFeedDay() {
+        LocalDate now = LocalDate.now();
+        YearMonth currentMonth = YearMonth.from(now);
+
+        LocalDate date = feedDay(currentMonth);
+
+        if (date.isAfter(now)) {
+            return date;
+        } else {
+            return feedDay(currentMonth.plusMonths(1));
+        }
+    }
+
+    private LocalDate feedDay(YearMonth yearMonth) {
+        if (this == SECOND_SUNDAY) {
+            return yearMonth.atDay(1)
+                .with(java.time.temporal.TemporalAdjusters.dayOfWeekInMonth(2, DayOfWeek.SUNDAY));
+        } else {
+            return yearMonth.atDay(1)
+                .with(java.time.temporal.TemporalAdjusters.dayOfWeekInMonth(4, DayOfWeek.SUNDAY));
+        }
     }
 }

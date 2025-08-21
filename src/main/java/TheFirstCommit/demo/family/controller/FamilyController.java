@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,7 +45,7 @@ public class FamilyController {
     public ResponseEntity updateFamily(
         @AuthenticationPrincipal UserEntity user,
         @ModelAttribute RequestElderDto dto ,
-        @RequestPart(name="elderImg") MultipartFile elderImgFile)
+        @RequestPart(name="elderImg", required = false) MultipartFile elderImgFile)
     {
         familyService.updateFamily(user, dto, elderImgFile);
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
@@ -63,7 +64,7 @@ public class FamilyController {
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 
-    @GetMapping("/social/family/invite")
+    @PutMapping("/social/family/invite")
     public ResponseEntity checkJoinFamily(
         @RequestBody Map<String, String> body
     ) {

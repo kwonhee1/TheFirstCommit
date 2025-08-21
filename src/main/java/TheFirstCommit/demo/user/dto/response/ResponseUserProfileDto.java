@@ -20,7 +20,7 @@ public class ResponseUserProfileDto {
         responseUserProfileDto.name = userEntity.getName();
         responseUserProfileDto.relation = userEntity.getRelation();
         responseUserProfileDto.id = userEntity.getId();
-        responseUserProfileDto.img = userEntity.getImg()!=null ? ImgDto.of(userEntity.getImg()) : null;
+        responseUserProfileDto.img = ImgDto.of(userEntity.getImg());
         return responseUserProfileDto;
     }
 }

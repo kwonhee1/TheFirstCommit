@@ -26,6 +26,7 @@ public enum ErrorCode {
     NEW_LEADER(HttpStatus.BAD_REQUEST, "40001", "new leader"),
     LEADER_CHANGED(HttpStatus.BAD_REQUEST, "40002", "leader changed"),
     NOT_AUTHOR(HttpStatus.BAD_REQUEST, "40003", "not author"),
+    MAX_FEED(HttpStatus.BAD_REQUEST, "40004", "max feed"),
 
     // family 관련 500??
     NOT_LEADER(HttpStatus.BAD_REQUEST, "50001", "not leader"),

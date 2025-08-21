@@ -6,9 +6,10 @@ import TheFirstCommit.demo.exception.ErrorCode;
 import TheFirstCommit.demo.payment.dto.CardInfoDto;
 import TheFirstCommit.demo.payment.dto.RequestSaveCardDto;
 import TheFirstCommit.demo.payment.dto.response.ResponseCardInfoDto;
-import TheFirstCommit.demo.payment.service.CardService;
 import TheFirstCommit.demo.payment.service.PaymentService;
 import TheFirstCommit.demo.user.entity.UserEntity;
+import TheFirstCommit.demo.user.service.UserService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final CardService cardService;
+    private final PaymentService cardService;
+    private final UserService userService;
 
     @PostMapping("/public/payment/card")
     public ResponseEntity saveNewCard(@AuthenticationPrincipal UserEntity user,@RequestBody RequestSaveCardDto dto) {
@@ -45,8 +46,9 @@ public class PaymentController {
     }
 
     @DeleteMapping("/api/payment/card")
-    public ResponseEntity deleteCard(@AuthenticationPrincipal UserEntity user) {
+    public ResponseEntity deleteCard(@AuthenticationPrincipal UserEntity user, @RequestBody(required = false) Map<String, Long> request) {
         cardService.remove(user);
+        userService.delete(user, request.get("nextLeaderId"), false);
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 

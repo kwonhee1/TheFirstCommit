@@ -1,5 +1,7 @@
 package TheFirstCommit.demo.family.service;
 
+import TheFirstCommit.demo.exception.CustomException;
+import TheFirstCommit.demo.exception.ErrorCode;
 import TheFirstCommit.demo.family.dto.page.FamilyPageDto;
 import TheFirstCommit.demo.family.dto.page.HomePageDto;
 import TheFirstCommit.demo.family.dto.response.ResponseElderDto;
@@ -29,17 +31,20 @@ public class FamilyPageDtoService {
         FamilyEntity family = userValidateService.getFamily(user);
 
         ResponseElderDto elderDto = ResponseElderDto.of(family.getElder());
-        ResponseFamilyMemberDto familyMemberDto = ResponseFamilyMemberDto.of(familyService.getFamilyMember(family));
+        ResponseFamilyMemberDto familyMemberDto = ResponseFamilyMemberDto.of(familyService.getFamilyMember(family), user.isLeader());
 
         return FamilyPageDto.builder().elder(elderDto).member(familyMemberDto).build();
     }
 
     public HomePageDto getHomePageDto(UserEntity user) {
-        feedService.canFeed(user);
+        FamilyEntity family = userValidateService.getFamily(user);
+
+        if(family.isChanged() && user.isLeader())
+            throw new CustomException(ErrorCode.NEW_LEADER);
 
         ResponsePaymentSummeryDto payment = paymentService.getFamilyPaymentSummeryDto(user);
         ResponseFamilyDto familyDto = familyService.getFamilyDto(user);
-        List<ResponseFeedDto> feedList = feedService.getFeedDtoList(userValidateService.getFamily(user));
+        List<ResponseFeedDto> feedList = feedService.getFeedDtoList(family);
 
         return new HomePageDto(payment, familyDto, feedList);
     }

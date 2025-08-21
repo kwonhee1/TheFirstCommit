@@ -27,11 +27,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE user SET delete_at = NOW(), social_id = null WHERE id = ?")
+@SQLRestriction("delete_at is null")
 public class UserEntity extends BasedEntity {
 
     @Id
@@ -50,7 +54,7 @@ public class UserEntity extends BasedEntity {
     @Column(nullable = false)
     private String provider;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String socialId;
 
     @Column(nullable = false)
@@ -90,7 +94,7 @@ public class UserEntity extends BasedEntity {
 
     public void update(ImgEntity img) { this.img = img; }
     public void update(UpdateUserFamilyDto dto) { this.family = dto.getFamily(); this.isLeader = dto.isLeader(); this.relation=dto.getRelation(); this.role = UserRole.USER; }
-    public void updateLeader() {this.isLeader = true;}
+    public void updateLeader(boolean a) {this.isLeader = a;}
 
 //    public boolean validate() {
 //        if( //이름/프로필사진/생년월일/전화번호/받는 분과의 관계

@@ -1,5 +1,6 @@
 package TheFirstCommit.demo.user.social;
 
+import TheFirstCommit.demo.user.dto.response.ResponseTokenDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
 import io.netty.handler.codec.http.HttpHeaderValues;
@@ -28,7 +29,7 @@ public class KakaoService {
     @Value("${kakao.client-secret}")
     private String ClientSecret;
 
-    public UserEntity socialLogin(String code) {
+    public ResponseTokenDto socialLogin(String code) {
         Map<String, Object> info = getUserFromKakao(code);
 
         return userService.login(String.valueOf(info.get("id")), RegisterDto
@@ -66,7 +67,7 @@ public class KakaoService {
 
     public Map<String, Object> getUserInfo(String accessToken) {
 
-        return WebClient.create(UserInfoURI)
+        Map response = WebClient.create(UserInfoURI)
             .get()
             .uri(uriBuilder -> uriBuilder
                 .build(true))
@@ -77,5 +78,8 @@ public class KakaoService {
             .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Internal Server Error")))
             .bodyToMono(Map.class)
             .block();
+
+        System.out.println(response);
+        return response;
     }
 }
