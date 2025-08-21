@@ -13,6 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -42,7 +44,6 @@ public class FamilyEntity extends BasedEntity {
     @OneToOne(mappedBy = "family", targetEntity = ElderEntity.class)
     private ElderEntity elder;
 
-    @OneToMany
-    private List<UserEntity> member;
-
+    @OneToMany(mappedBy = "family")
+    private List<UserEntity> member = new ArrayList<>();
 }

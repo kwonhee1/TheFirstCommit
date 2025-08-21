@@ -35,13 +35,18 @@ public class NewsEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DeliveryStatus deliveryStatus;
+
     @PrePersist
     protected void onCreate() { this.createdAt = LocalDateTime.now(); }
 
     @Builder
-    public NewsEntity(FamilyEntity family, ImgEntity img, LocalDate publishedAt) {
+    public NewsEntity(FamilyEntity family, ImgEntity img, LocalDate publishedAt, DeliveryStatus deliveryStatus) { // deliveryStatus 추가
         this.family = family;
         this.img = img;
         this.publishedAt = publishedAt;
+        this.deliveryStatus = deliveryStatus; // deliveryStatus 추가
     }
 }

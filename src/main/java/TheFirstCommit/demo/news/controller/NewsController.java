@@ -1,6 +1,7 @@
 package TheFirstCommit.demo.news.controller;
 
 import TheFirstCommit.demo.news.dto.NewsListResponseDto;
+import TheFirstCommit.demo.news.dto.ResponseNewsBoxDto;
 import TheFirstCommit.demo.news.service.NewsQueryService;
 import TheFirstCommit.demo.news.service.NewsService;
 import TheFirstCommit.demo.user.entity.UserEntity;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,8 +28,8 @@ public class NewsController {
     private final UserRepository userRepository; // UserRepository 주입
 
     @GetMapping
+    @Transactional(readOnly = true)
     public ResponseEntity<?> getNewsList(@AuthenticationPrincipal UserEntity user) {
-        // LAZY 로딩 문제를 해결하기 위해 DB에서 사용자 정보를 다시 조회
         UserEntity fullUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. ID: " + user.getId()));
 
@@ -37,16 +39,16 @@ public class NewsController {
                     .body("소속된 가족이 없어 소식지를 조회할 수 없습니다.");
         }
 
-        List<NewsListResponseDto> newsList = newsQueryService.findAllNews(fullUser.getFamily());
-        return ResponseEntity.ok(newsList);
+        ResponseNewsBoxDto response = newsQueryService.getNewsBox(fullUser.getFamily());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Transactional
     public ResponseEntity<?> createNews(
             @AuthenticationPrincipal UserEntity user,
             @RequestPart("file") MultipartFile pdfFile) {
 
-        // LAZY 로딩 문제를 해결하기 위해 DB에서 사용자 정보를 다시 조회
         UserEntity fullUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. ID: " + user.getId()));
 
