@@ -4,7 +4,10 @@ import TheFirstCommit.demo.exception.CustomException;
 import TheFirstCommit.demo.exception.ErrorCode;
 import io.ipfs.api.IPFS;
 import io.ipfs.api.NamedStreamable;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +29,27 @@ public class ImgServiceIpfs implements ImgService {
     @Override
     @Transactional
     public ImgEntity getImg(String imgURL) {
-        return null;
+        try {
+            byte[] imageBytes = downloadImage(imgURL);
+            NamedStreamable.ByteArrayWrapper file = new NamedStreamable.ByteArrayWrapper(imageBytes);
+            String cid = ipfs.add(file).get(0).hash.toString();
+            return ImgEntity.builder().cid(cid).build();
+        } catch (Exception e){
+            return null;
+        }
+    }
+
+    private byte[] downloadImage(String imageUrl) throws Exception {
+        try (InputStream in = new URL(imageUrl).openStream();
+            ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+            return out.toByteArray();
+        }
     }
 
     @Override

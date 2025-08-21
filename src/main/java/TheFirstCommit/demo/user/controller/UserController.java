@@ -7,6 +7,7 @@ import TheFirstCommit.demo.payment.dto.response.ResponsePaymentSummeryDto;
 import TheFirstCommit.demo.payment.service.PaymentService;
 import TheFirstCommit.demo.user.dto.request.RequestUpdateUserInfoDto;
 import TheFirstCommit.demo.user.dto.response.MyPageDto;
+import TheFirstCommit.demo.user.dto.response.ResponseUserDetailDto;
 import TheFirstCommit.demo.user.dto.response.ResponseUserInfoDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
@@ -46,16 +47,21 @@ public class UserController {
         if(user == null)
             throw new CustomException(ErrorCode.UNAUTHORIZED);
 
-        ResponseUserInfoDto userInfoDto = ResponseUserInfoDto.of(user);
+        ResponseUserDetailDto userInfoDto = ResponseUserDetailDto.of(user);
         Object paymentDto = paymentService.getFamilyPaymentDto(user);
 
         return ResponseEntity.ok().body(new SuccessResponse("success", MyPageDto.builder().paymentDto(paymentDto).userInfoDto(userInfoDto).build()));
     }
 
-    @DeleteMapping("/api/user")
-    public ResponseEntity deleteUser(@AuthenticationPrincipal UserEntity user, @RequestBody(required = false) Long nextLeaderId) {
-        userService.delete(user, nextLeaderId);
+    @DeleteMapping("/api/user/delete")
+    public ResponseEntity deleteUser(@AuthenticationPrincipal UserEntity user, @RequestBody(required = false) Map<String, Long> request) {
+        userService.delete(user, request.get("nextLeaderId"), true);
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
+    }
+
+    @GetMapping("/api/user/delete")
+    public ResponseEntity deleteUser(@AuthenticationPrincipal UserEntity user) {
+        return ResponseEntity.ok().body(new SuccessResponse("success",userService.getDeleteDto(user)));
     }
 
 }

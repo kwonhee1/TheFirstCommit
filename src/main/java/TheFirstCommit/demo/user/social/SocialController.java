@@ -5,11 +5,8 @@ import TheFirstCommit.demo.config.security.util.JWTUtil;
 import TheFirstCommit.demo.exception.CustomException;
 import TheFirstCommit.demo.exception.ErrorCode;
 import TheFirstCommit.demo.user.dto.response.ResponseTokenDto;
-import TheFirstCommit.demo.user.dto.response.ResponseUserDetailDto;
-import TheFirstCommit.demo.user.entity.UserEntity;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,15 +53,17 @@ public class SocialController {
             case "google":
                 authorizationUri = googleAuthorizationUri;
                 clientId = googleClientId;
-                scope = "&scope=openid";
+                scope = "&scope=openid%20profile";
                 break;
             case "kakao":
                 authorizationUri = kakaoAuthorizationUri;
                 clientId = kakaoClientId;
+                scope = "&scope=profile_image%20name%20birthday%20birthyear%20phone_number";
                 break;
             case "naver":
                 authorizationUri = naverAuthorizationUri;
                 clientId = naverClientId;
+                scope = "&scope=nickname%20profile_image%20birthday%20mobile";
                 break;
             default:
                 throw new CustomException(ErrorCode.NOT_FOUND, "provider");
@@ -79,27 +78,28 @@ public class SocialController {
 
     @PostMapping("/google")
     public ResponseEntity google(@RequestBody SocialDto dto) {
-        UserEntity user = googleService.socialLogin(dto.getCode());
-        return response(user);
+        ResponseTokenDto tokenDto = googleService.socialLogin(dto.getCode());
+        return response(tokenDto);
     }
 
     @PostMapping("/kakao")
     public ResponseEntity kakao(@RequestBody SocialDto dto) {
-        UserEntity user = kakaoService.socialLogin(dto.getCode());
-        return response(user);
+        ResponseTokenDto tokenDto = kakaoService.socialLogin(dto.getCode());
+        return response(tokenDto);
     }
 
     @PostMapping("/naver")
     public ResponseEntity naver(@RequestBody SocialDto dto) {
-        UserEntity user = naverService.socialLoin(dto.getCode());
-        return response(user);
+        ResponseTokenDto tokenDto = naverService.socialLoin(dto.getCode());
+        return response(tokenDto);
     }
 
-    private ResponseEntity response(UserEntity user) {
-        String access = JWTUtil.generateAccessToken(user.getId());
-        String refresh = JWTUtil.generateRefreshToken(user.getId());
+    private ResponseEntity response(ResponseTokenDto tokenDto) {
+        String access = JWTUtil.generateAccessToken(tokenDto.getUserEntity().getId());
+        String refresh = JWTUtil.generateRefreshToken(tokenDto.getUserEntity().getId());
 
-        ResponseTokenDto tokenDto = ResponseTokenDto.all(access, refresh, user);
+        tokenDto.setAccessToken(access);
+        tokenDto.setRefreshToken(refresh);
 
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse("success", tokenDto));
     }

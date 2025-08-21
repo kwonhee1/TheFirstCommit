@@ -14,6 +14,8 @@ import TheFirstCommit.demo.family.repository.ElderRepository;
 import TheFirstCommit.demo.family.repository.FamilyRepository;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
+import TheFirstCommit.demo.payment.entity.CardEntity;
+import TheFirstCommit.demo.payment.service.PaymentService;
 import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
@@ -21,6 +23,7 @@ import TheFirstCommit.demo.user.service.UserValidateService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -31,7 +34,9 @@ public class FamilyService {
     private final ElderRepository elderRepository;
     private final ImgService imgService;
     private final UserValidateService userValidateService;
+    private final PaymentService paymentService;
 
+    @Transactional
     public void save(UserEntity user, RequestNewFamilyDto familyDto, RequestElderDto elderDto, MultipartFile elderImgFile) {
         if(user.getFamily() != null)
             throw new CustomException(ErrorCode.ALREADY_EXIST, "family");
@@ -41,6 +46,13 @@ public class FamilyService {
         FamilyEntity family = familyRepository.save(familyDto.toFamilyEntity());
         elderRepository.save(elderDto.toEntity(family, imgEntity));
         userValidateService.updateUserFamily(user, new UpdateUserFamilyDto(family, familyDto.getRelation(), true));
+
+        Optional<CardEntity> card = paymentService.getCardOpt(user);
+        if(card.isPresent()) {
+            // 첫 가입에 카드를 등록하고 가족을 만드는 경우
+            paymentService.payment(card.get(), family);
+            family.payNow();
+        }
     }
 
     // elder 정보 수정 (leader 만 가능!)

@@ -1,5 +1,6 @@
 package TheFirstCommit.demo.user.social;
 
+import TheFirstCommit.demo.user.dto.response.ResponseTokenDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class GoogleService {
         RedirectURI = String.format("%s/social/google", domain);
     }
 
-    public UserEntity socialLogin(String code) {
+    public ResponseTokenDto socialLogin(String code) {
         String accessToken = getAccessTokenFromGoogle(code);
 
         Map<String, String> info = getUserInfoFromGoogle(accessToken);
@@ -78,7 +79,7 @@ public class GoogleService {
     }
 
     private Map<String, String> getUserInfoFromGoogle(String accessToken) {
-        return WebClient.create(UserInfoURI).get()
+        Map response1 = WebClient.create(UserInfoURI).get()
             .uri(uriBuilder -> uriBuilder
                 .build())
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
@@ -86,5 +87,8 @@ public class GoogleService {
             .onStatus(HttpStatusCode::is4xxClientError, (response) -> Mono.error(new RuntimeException(response.toString())))
             .bodyToMono(Map.class)
             .block();
+
+        //System.out.println(response1);
+        return response1;
     }
 }

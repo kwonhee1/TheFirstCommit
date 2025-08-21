@@ -1,5 +1,6 @@
 package TheFirstCommit.demo.user.social;
 
+import TheFirstCommit.demo.user.dto.response.ResponseTokenDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class NaverService {
     @Value("${naver.client-secret}")
     private String ClientSecret;
 
-    public UserEntity socialLoin(String code) {
+    public ResponseTokenDto socialLoin(String code) {
         Map<String, String> info = getUserFromNaver(code);
 
         return userService.login(info.get("id"), RegisterDto
@@ -37,7 +38,7 @@ public class NaverService {
             //.email(info.get("email"))
             .name(info.get("name"))
             .number(info.get("mobile"))
-            // .birth()
+            .birth(info.get("birthyear") + "-" + info.get("birthday"))
             //.nickName(info.get("nickname"))
             .imgURL(info.get("profile_image"))
             .build()
@@ -63,7 +64,7 @@ public class NaverService {
     }
 
     public Map<String, String> getUserInfo(String accessToken) {
-        return WebClient.create(UserInfoURI).post()
+        Map response1 = WebClient.create(UserInfoURI).post()
             .uri(uriBuilder -> uriBuilder
                 .queryParam("client_id", ClientId)
                 .queryParam("client_secret", ClientSecret)
@@ -77,5 +78,7 @@ public class NaverService {
                 return (Map<String, String>) response.get("response");
             })
             .block();
+        //System.out.println(response1);
+        return response1;
     }
 }

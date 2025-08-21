@@ -2,6 +2,7 @@ package TheFirstCommit.demo.feed.service;
 
 import TheFirstCommit.demo.exception.CustomException;
 import TheFirstCommit.demo.exception.ErrorCode;
+import TheFirstCommit.demo.family.PaymentDay;
 import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.feed.dto.CreateFeedRequestDto;
 import TheFirstCommit.demo.feed.dto.ResponseFeedDto;
@@ -12,10 +13,11 @@ import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
 import TheFirstCommit.demo.feed.entity.ImgFeedEntity;
 import TheFirstCommit.demo.feed.repository.ImgFeedRepository;
-import TheFirstCommit.demo.payment.service.CardService;
+import TheFirstCommit.demo.payment.service.PaymentService;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserValidateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +32,7 @@ public class FeedServiceImpl implements FeedService {
     private final ImgService imgService;
     private final ImgFeedRepository imgFeedRepository;
     private final UserValidateService userValidateService;
-    private final CardService cardService;
+    private final PaymentService paymentService;
 
     @Override
     @Transactional
@@ -135,9 +137,12 @@ public class FeedServiceImpl implements FeedService {
         if(family.isChanged())
             throw new CustomException(ErrorCode.LEADER_CHANGED);
 
-        if(getFeedCountByFamily(family) >= 3 && cardService.getCardOpt(userValidateService.findLeader(user)).isEmpty()){
+        if(getFeedCountByFamily(family) >= 3 && paymentService.getCardOpt(userValidateService.findLeader(user)).isEmpty()){
             throw new CustomException(ErrorCode.NOT_EXIST_CARD);
         }
+
+        if(getFeedCountByFamily(family) >= 20)
+            throw new CustomException(ErrorCode.MAX_FEED);
     }
 
     @Override
@@ -148,5 +153,14 @@ public class FeedServiceImpl implements FeedService {
 
     private Long getFeedCountByFamily(FamilyEntity family){
         return feedRepository.countByFamily(family.getId());
+    }
+
+    @Scheduled(cron = "${payment.second-week-sunday}")
+    public void deleteAllFeeds() {
+        feedRepository.deleteAll(PaymentDay.SECOND_SUNDAY.name());
+    }
+    @Scheduled(cron = "${payment.four-week-sunday}")
+    public void deleteAllFeeds2() {
+        feedRepository.deleteAll(PaymentDay.FOURTH_SUNDAY.name());
     }
 }

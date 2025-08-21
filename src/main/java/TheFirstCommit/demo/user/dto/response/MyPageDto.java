@@ -12,15 +12,15 @@ import lombok.Setter;
 @Getter @Setter
 public class MyPageDto {
 
-    private ResponseUserInfoDto userInfoDto;
+    private ResponseUserDetailDto userInfoDto;
     private Object paymentDto;
-    @JsonProperty("hasCard")
-    private boolean hasCard;
+    @JsonProperty("hasPaid")
+    private boolean isPaid;
 
     @Builder
-    public MyPageDto(ResponseUserInfoDto userInfoDto, Object paymentDto) {
+    public MyPageDto(ResponseUserDetailDto userInfoDto, Object paymentDto) {
         this.userInfoDto = userInfoDto;
         this.paymentDto = paymentDto;
-        this.hasCard = paymentDto instanceof ResponsePaymentInfoDto;
+        this.isPaid = paymentDto instanceof ResponsePaymentInfoDto;
     }
 }
