@@ -33,9 +33,6 @@ public class PaymentController {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
 
-//        if(user.getCard() != null)
-//            throw new CustomException(ErrorCode.ALREADY_EXIST, "card");
-
         CardInfoDto cardInfo = cardService.saveCard(user, dto);
         return ResponseEntity.ok().body(new SuccessResponse("success", ResponseCardInfoDto.of(cardInfo)));
     }

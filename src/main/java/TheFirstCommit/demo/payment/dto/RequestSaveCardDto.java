@@ -1,5 +1,6 @@
 package TheFirstCommit.demo.payment.dto;
 
+import TheFirstCommit.demo.family.PaymentDay;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -16,5 +17,7 @@ public class RequestSaveCardDto {
     private String customerKey;
     @NotEmpty @NotNull
     private String authKey;
+
+    private PaymentDay paymentDay;
 
 }
