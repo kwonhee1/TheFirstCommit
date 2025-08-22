@@ -2,6 +2,7 @@ package TheFirstCommit.demo.family.entity;
 
 import TheFirstCommit.demo.BasedEntity;
 import TheFirstCommit.demo.family.PaymentDay;
+import TheFirstCommit.demo.news.entity.NewsEntity;
 import TheFirstCommit.demo.payment.entity.PaymentEntity;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import jakarta.persistence.CascadeType;
@@ -75,6 +76,9 @@ public class FamilyEntity extends BasedEntity {
 
     @OneToMany(targetEntity = PaymentEntity.class, mappedBy = "family", cascade = {CascadeType.REMOVE})
     private List<PaymentEntity> payment;
+
+    @OneToMany(targetEntity = NewsEntity.class, mappedBy = "family", cascade = {CascadeType.REMOVE})
+    private List<NewsEntity> news;
 
 //    @OneToMany
 //    private List<NewsEntity>
