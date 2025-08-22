@@ -3,6 +3,7 @@ package TheFirstCommit.demo.family.service;
 import TheFirstCommit.demo.exception.CustomException;
 import TheFirstCommit.demo.exception.ErrorCode;
 import TheFirstCommit.demo.family.FamilyCodeUtil;
+import TheFirstCommit.demo.family.PaymentDay;
 import TheFirstCommit.demo.family.dto.FamilyMemberDto;
 import TheFirstCommit.demo.family.dto.request.RequestElderDto;
 import TheFirstCommit.demo.family.dto.request.RequestJoinFamilyDto;
@@ -53,6 +54,12 @@ public class FamilyService {
             paymentService.payment(card.get(), family);
             family.payNow();
         }
+    }
+
+    @Transactional
+    public void updateFamilyPaymentDay(UserEntity user, PaymentDay paymentDay) {
+        FamilyEntity family = userValidateService.getFamily(user);
+        family.updatePaymentDay(paymentDay);
     }
 
     // elder 정보 수정 (leader 만 가능!)

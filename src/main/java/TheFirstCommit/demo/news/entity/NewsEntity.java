@@ -25,7 +25,7 @@ public class NewsEntity extends BasedEntity {
     @JoinColumn(name = "family_id")
     private FamilyEntity family;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     @JoinColumn(name = "img_id")
     private ImgEntity img;
 

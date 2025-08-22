@@ -1,21 +1,27 @@
 package TheFirstCommit.demo.news.dto;
 
 import TheFirstCommit.demo.news.entity.NewsEntity;
+import TheFirstCommit.demo.img.ImgDto;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 public class NewsListResponseDto {
     private final Long newsId;
-    private final LocalDate publishedAt;
-    private final String cid;
+    private final String publishedAt;
+    private final ImgDto file;
     private final String deliveryStatus;
 
     public NewsListResponseDto(NewsEntity news) {
         this.newsId = news.getId();
-        this.publishedAt = news.getPublishedAt();
-        this.cid = news.getImg().getCid();
-        this.deliveryStatus = news.getDeliveryStatus().getDescription();
+        this.publishedAt = dateToStr(news.getCreatedAt());
+        this.file = ImgDto.of(news.getImg());
+        this.deliveryStatus = news.getDeliveryStatus().description;
+    }
+
+    private String dateToStr(LocalDateTime date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy년 MM월 '소식지'");
+        return date.format(formatter);
     }
 }

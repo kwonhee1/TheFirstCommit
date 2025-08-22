@@ -30,6 +30,12 @@ public class FamilyController {
     private final FamilyService familyService;
     private final FamilyPageDtoService familyPageDtoService;
 
+    @PatchMapping("/api/family")
+    public ResponseEntity updateFamilyPayment(@AuthenticationPrincipal UserEntity user, @RequestBody RequestNewFamilyDto dto) {
+        familyService.updateFamilyPaymentDay(user, dto.getPaymentDay());
+        return ResponseEntity.ok().body(new SuccessResponse("success", null));
+    }
+
     @PostMapping("/social/family")
     public ResponseEntity createNewFamily(
         @ModelAttribute RequestNewFamilyDto dto ,

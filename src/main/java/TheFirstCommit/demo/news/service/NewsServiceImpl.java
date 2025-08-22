@@ -22,15 +22,14 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     @Transactional
-    public void createNews(MultipartFile pdfFile, FamilyEntity family) throws IOException {
+    public void createNews(MultipartFile pdfFile, FamilyEntity family) {
         ImgEntity pdfImgEntity = imgService.save(pdfFile);
 
         NewsEntity news = NewsEntity.builder()
                 .family(family)
                 .img(pdfImgEntity)
-                .publishedAt(LocalDate.now())
-                .deliveryStatus(DeliveryStatus.COMPLETED_PRODUCTION) // ★★★ 초기 상태를 '제작 완료'로 지정 ★★★
                 .build();
+
         newsRepository.save(news);
     }
 }

@@ -5,14 +5,10 @@ public enum DeliveryStatus {
     SHIPPING("배송 중"),
     DELIVERED("배송 완료");
 
-    private final String description;
+    public String description;
 
     DeliveryStatus(String description) {
         this.description = description;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 
 }

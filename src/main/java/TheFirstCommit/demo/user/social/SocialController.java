@@ -58,7 +58,7 @@ public class SocialController {
             case "kakao":
                 authorizationUri = kakaoAuthorizationUri;
                 clientId = kakaoClientId;
-                scope = "&scope=profile_image%20name%20birthday%20birthyear%20phone_number";
+                // scope = "&scope=profile_image%20name%20birthday%20birthyear%20phone_number";
                 break;
             case "naver":
                 authorizationUri = naverAuthorizationUri;
