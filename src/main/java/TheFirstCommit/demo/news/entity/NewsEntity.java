@@ -1,5 +1,6 @@
 package TheFirstCommit.demo.news.entity;
 
+import TheFirstCommit.demo.BasedEntity;
 import TheFirstCommit.demo.family.entity.FamilyEntity;
 import TheFirstCommit.demo.img.ImgEntity; // ImgEntity 임포트
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "news")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NewsEntity {
+public class NewsEntity extends BasedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,29 +25,18 @@ public class NewsEntity {
     @JoinColumn(name = "family_id")
     private FamilyEntity family;
 
-    // ImgEntity와 1:1 관계 설정
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "img_id")
-    private ImgEntity img; // PDF 파일 정보를 담는 ImgEntity
-
-    @Column(nullable = false)
-    private LocalDate publishedAt;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private ImgEntity img;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DeliveryStatus deliveryStatus;
-
-    @PrePersist
-    protected void onCreate() { this.createdAt = LocalDateTime.now(); }
+    private DeliveryStatus deliveryStatus = DeliveryStatus.COMPLETED_PRODUCTION;
 
     @Builder
-    public NewsEntity(FamilyEntity family, ImgEntity img, LocalDate publishedAt, DeliveryStatus deliveryStatus) { // deliveryStatus 추가
+    public NewsEntity(Long id, FamilyEntity family, ImgEntity img) {
+        this.id = id;
         this.family = family;
         this.img = img;
-        this.publishedAt = publishedAt;
-        this.deliveryStatus = deliveryStatus; // deliveryStatus 추가
     }
 }

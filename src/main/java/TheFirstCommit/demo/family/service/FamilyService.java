@@ -3,6 +3,7 @@ package TheFirstCommit.demo.family.service;
 import TheFirstCommit.demo.exception.CustomException;
 import TheFirstCommit.demo.exception.ErrorCode;
 import TheFirstCommit.demo.family.FamilyCodeUtil;
+import TheFirstCommit.demo.family.dto.FamilyMemberDto;
 import TheFirstCommit.demo.family.dto.request.RequestElderDto;
 import TheFirstCommit.demo.family.dto.request.RequestJoinFamilyDto;
 import TheFirstCommit.demo.family.dto.request.RequestNewFamilyDto;
@@ -13,12 +14,16 @@ import TheFirstCommit.demo.family.repository.ElderRepository;
 import TheFirstCommit.demo.family.repository.FamilyRepository;
 import TheFirstCommit.demo.img.ImgEntity;
 import TheFirstCommit.demo.img.ImgService;
+import TheFirstCommit.demo.payment.entity.CardEntity;
+import TheFirstCommit.demo.payment.service.PaymentService;
 import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
 import TheFirstCommit.demo.user.service.UserService;
+import TheFirstCommit.demo.user.service.UserValidateService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -27,9 +32,11 @@ public class FamilyService {
 
     private final FamilyRepository familyRepository;
     private final ElderRepository elderRepository;
-    private final UserService userService;
     private final ImgService imgService;
+    private final UserValidateService userValidateService;
+    private final PaymentService paymentService;
 
+    @Transactional
     public void save(UserEntity user, RequestNewFamilyDto familyDto, RequestElderDto elderDto, MultipartFile elderImgFile) {
         if(user.getFamily() != null)
             throw new CustomException(ErrorCode.ALREADY_EXIST, "family");
@@ -38,7 +45,14 @@ public class FamilyService {
         ImgEntity imgEntity = imgService.save(elderImgFile);
         FamilyEntity family = familyRepository.save(familyDto.toFamilyEntity());
         elderRepository.save(elderDto.toEntity(family, imgEntity));
-        userService.updateUserFamily(user, new UpdateUserFamilyDto(family, familyDto.getRelation(), true));
+        userValidateService.updateUserFamily(user, new UpdateUserFamilyDto(family, familyDto.getRelation(), true));
+
+        Optional<CardEntity> card = paymentService.getCardOpt(user);
+        if(card.isPresent()) {
+            // 첫 가입에 카드를 등록하고 가족을 만드는 경우
+            paymentService.payment(card.get(), family);
+            family.payNow();
+        }
     }
 
     // elder 정보 수정 (leader 만 가능!)
@@ -65,12 +79,21 @@ public class FamilyService {
     // join with family code
     public void joinFamily(UserEntity user, RequestJoinFamilyDto dto) {
         FamilyEntity family = getFamilyByCode(dto.getFamilyCode()).orElseThrow(()->{return new CustomException(ErrorCode.NOT_FOUND, "family");});
-        userService.updateUserFamily(user, new UpdateUserFamilyDto(family, dto.getRelation(), false));
+        userValidateService.updateUserFamily(user, new UpdateUserFamilyDto(family, dto.getRelation(), false));
     }
 
-    // 유져별 가족 정보 확인 (main page에서 사용, 모든 정보 렌더링)
-    public ResponseFamilyDto getFamilyData(UserEntity user) {
-        return null;
+    public void deleteFamily(FamilyEntity family) {
+        familyRepository.delete(family);
+    }
+
+    ///  get dtos
+
+    public ResponseFamilyDto getFamilyDto(UserEntity user) {
+        return ResponseFamilyDto.of(user.getFamily().getFamilyName(), familyRepository.getMemberCount(user.getFamily().getId()));
+    }
+
+    protected FamilyMemberDto getFamilyMember(FamilyEntity family) {
+        return FamilyMemberDto.of(family.getFamilyName(), familyRepository.getFamilyMember(family.getId()), familyRepository.getFamilyLeader(family.getId()));
     }
 
     // --------- validate

@@ -35,6 +35,6 @@ public class TokenController {
             () -> new CustomException(ErrorCode.INVALID_TOKEN)
         );
         log.info("refresh access token success " + userId);
-        return ResponseEntity.ok(new SuccessResponse("success", ResponseTokenDto.access(JWTUtil.generateAccessToken(userId))));
+        return ResponseEntity.ok(new SuccessResponse("success", new ResponseTokenDto(JWTUtil.generateAccessToken(userId))));
     }
 }

@@ -1,6 +1,5 @@
-package TheFirstCommit.demo.imgFeed;
+package TheFirstCommit.demo.feed.entity;
 
-import TheFirstCommit.demo.feed.entity.FeedEntity;
 import TheFirstCommit.demo.img.ImgEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,7 +21,7 @@ public class ImgFeedEntity {
     @JoinColumn(name = "feed_id")
     private FeedEntity feed;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "img_id")
     private ImgEntity img;
 

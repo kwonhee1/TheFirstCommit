@@ -1,5 +1,6 @@
-package TheFirstCommit.demo.imgFeed;
+package TheFirstCommit.demo.feed.repository;
 
+import TheFirstCommit.demo.feed.entity.ImgFeedEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,5 +1,8 @@
 package TheFirstCommit.demo.user.dto.response;
 
+import TheFirstCommit.demo.user.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +12,26 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 public class ResponseTokenDto {
+
     private String accessToken;
     private String refreshToken;
+    @JsonProperty("user")
+    private ResponseUserDetailDto userDetailDto;
+    private boolean isFirst;
 
-    public static ResponseTokenDto access(String accessToken) { return new ResponseTokenDto(accessToken, null); }
-    public static ResponseTokenDto refresh(String refreshToken) { return new ResponseTokenDto(null, refreshToken); }
-    public static ResponseTokenDto all(String accessToken, String refreshToken) { return new ResponseTokenDto(accessToken, refreshToken); }
+    @JsonIgnore
+    private UserEntity userEntity;
+
+    public ResponseTokenDto(UserEntity userEntity) {
+        this.userEntity = userEntity;
+        isFirst = false;
+    }
+    public ResponseTokenDto(UserEntity userEntity, ResponseUserDetailDto userDetailDto) {
+        this.userEntity = userEntity;
+        this.userDetailDto = userDetailDto;
+        isFirst = true;
+    }
+    public ResponseTokenDto(String accessToken) {
+        this.accessToken = accessToken;
+    }
 }
