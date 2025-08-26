@@ -1,27 +1,24 @@
 package TheFirstCommit.demo.user.service;
 
-import TheFirstCommit.demo.family.FamilyEntity;
+import TheFirstCommit.demo.family.entity.FamilyEntity;
+import TheFirstCommit.demo.user.dto.UserDeletePageDto;
+import TheFirstCommit.demo.user.dto.request.RequestUpdateUserInfoDto;
+import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
+import TheFirstCommit.demo.user.dto.response.ResponseTokenDto;
 import TheFirstCommit.demo.user.social.RegisterDto;
 import TheFirstCommit.demo.user.entity.UserEntity;
-import java.util.Optional;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
     // login
-    Optional<UserEntity> login(String socialId);
-
-    // register
-    UserEntity register(RegisterDto dto);
+    ResponseTokenDto login(String socialId, RegisterDto registerDto);
 
     // update
-    void update(UserEntity user, MultipartFile imgFile);
-    void update(UserEntity user, String name, String relation);
+    void update(UserEntity user, RequestUpdateUserInfoDto dto);
 
     // delete
-    void delete(UserEntity user);
+    void delete(UserEntity user, Long nextLeaderUserId, boolean deleteUser);
 
-    // set family (make new family or set other exist family)
-    void setFamily(UserEntity user, FamilyEntity family, boolean isLeader);
+    UserDeletePageDto getDeleteDto(UserEntity user);
 
 }

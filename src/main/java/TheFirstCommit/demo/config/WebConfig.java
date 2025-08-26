@@ -18,7 +18,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // 모든 경로에 대해
-                    .allowedOrigins("http://localhost:6000", "http://localhost:5173") // 프론트 주소
+                    .allowedOrigins("http://localhost:6000", "http://localhost:5173", "https://deardream.r-e.kr","https://api.deardream.r-e.kr", "https://ipfs.deardream.r-e.kr") // 프론트 주소
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                     .allowedHeaders("*")
                     //.exposedHeaders("access")

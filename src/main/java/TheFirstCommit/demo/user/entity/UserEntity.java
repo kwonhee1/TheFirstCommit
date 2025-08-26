@@ -1,8 +1,14 @@
 package TheFirstCommit.demo.user.entity;
 
-import TheFirstCommit.demo.CustomEntity;
-import TheFirstCommit.demo.family.FamilyEntity;
+import TheFirstCommit.demo.BasedEntity;
+import TheFirstCommit.demo.family.entity.ElderEntity;
+import TheFirstCommit.demo.family.entity.FamilyEntity;
+import TheFirstCommit.demo.feed.entity.FeedEntity;
 import TheFirstCommit.demo.img.ImgEntity;
+import TheFirstCommit.demo.payment.entity.CardEntity;
+import TheFirstCommit.demo.user.dto.request.RequestUpdateUserInfoDto;
+import TheFirstCommit.demo.user.dto.request.UpdateUserFamilyDto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,21 +17,26 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "user")
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserEntity extends CustomEntity {
+@SQLDelete(sql = "UPDATE user SET delete_at = NOW(), social_id = null, img_id = null WHERE id = ?")
+@SQLRestriction("delete_at is null")
+public class UserEntity extends BasedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,16 +54,16 @@ public class UserEntity extends CustomEntity {
     @Column(nullable = false)
     private String provider;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String socialId;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.SOCIAL;
 
-    @OneToOne(targetEntity = FamilyEntity.class)
+    @ManyToOne(targetEntity = FamilyEntity.class)
     @JoinColumn(name = "family_id", nullable = true)
-    private FamilyEntity family;
+    private FamilyEntity family; // 코드로 삭제
 
     @Column(nullable = false)
     private boolean isLeader = false;
@@ -60,13 +71,58 @@ public class UserEntity extends CustomEntity {
     @Column
     private String relation;
 
-    @OneToOne(targetEntity = ImgEntity.class)
+    @Column
+    private boolean isUpdate = false;
+
+    @OneToOne(targetEntity = ImgEntity.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "img_id", nullable = true)
     private ImgEntity img;
 
-    // update user info
-    public void updateName(String newName) {this.name = newName;}
-    public void updateRelation(String newRelation) {this.relation = newRelation;}
-    public void updateFamily(FamilyEntity newFamily) {this.family = newFamily; this.role=UserRole.USER; }
-    public void updateIsLeader(boolean isLeader) {this.isLeader = isLeader;}
+    @OneToMany(targetEntity = CardEntity.class, mappedBy = "user", cascade = {CascadeType.REMOVE})
+    private Set<CardEntity> card;
+
+    @OneToMany(targetEntity = FeedEntity.class, mappedBy = "user", cascade = {CascadeType.REMOVE})
+    private List<FeedEntity> feeds;
+
+    public void update(RequestUpdateUserInfoDto dto) {
+        if(dto.getBirth() != null && !dto.getBirth().isEmpty())
+            this.birth = dto.getBirth();
+        if(dto.getName() != null && !dto.getName().isEmpty())
+            this.name = dto.getName();
+        if(dto.getRelation() != null && !dto.getRelation().isEmpty())
+            this.relation = dto.getRelation();
+        if(dto.getNumber() != null && !dto.getNumber().isEmpty())
+            this.number = dto.getNumber();
+        isUpdate = true;
+    }
+
+    public void update(ImgEntity img) { this.img = img; this.isUpdate= true; }
+    public void update(UpdateUserFamilyDto dto) { this.family = dto.getFamily(); this.isLeader = dto.isLeader(); this.relation=dto.getRelation(); this.role = UserRole.USER; this.isUpdate= true; }
+    public void updateLeader(boolean a) {this.isLeader = a;}
+
+//    public boolean validate() {
+//        if( //이름/프로필사진/생년월일/전화번호/받는 분과의 관계
+//            name != null && !name.isEmpty() &&
+//            img != null &&
+//            number != null && !number.isEmpty() &&
+//            birth != null && !birth.isEmpty() &&
+//            relation != null && !relation.isEmpty())
+//                return true;
+//        return false;
+//    }
+
+    @Builder
+    public UserEntity(long id, String name, String number, String birth, String provider,
+        String socialId, FamilyEntity family, String relation,
+        ImgEntity img) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.birth = birth;
+        this.provider = provider;
+        this.socialId = socialId;
+        this.family = family;
+        this.relation = relation;
+        this.img = img;
+    }
 }

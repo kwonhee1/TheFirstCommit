@@ -36,7 +36,7 @@ public class JWTUtil {
         return Jwts.builder()
             .setSubject(ACCESS)
             .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRE * 1000))
-            .setClaims(Map.of("userId", userId))
+            .claim("userId", userId)
             .signWith(jwtKey)
             .compact();
     }
@@ -44,7 +44,7 @@ public class JWTUtil {
         return Jwts.builder()
             .setSubject(REFRESH)
             .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRE * 1000))
-            .setClaims(Map.of("userId", userId))
+            .claim("userId", userId)
             .signWith(jwtKey)
             .compact();
     }
