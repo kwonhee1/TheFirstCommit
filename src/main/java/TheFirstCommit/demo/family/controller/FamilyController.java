@@ -40,7 +40,7 @@ public class FamilyController {
     public ResponseEntity createNewFamily(
         @ModelAttribute RequestNewFamilyDto dto ,
         @RequestPart(required = true, name = "elder") RequestElderDto elderDto ,
-        @RequestPart(required = true, name = "elderImg") MultipartFile elderImgFile,
+        @RequestPart(required = false, name = "elderImg") MultipartFile elderImgFile,
         @AuthenticationPrincipal UserEntity user)
     {
         familyService.save(user, dto, elderDto, elderImgFile);

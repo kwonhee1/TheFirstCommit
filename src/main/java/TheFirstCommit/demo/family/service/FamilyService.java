@@ -42,7 +42,6 @@ public class FamilyService {
         if(user.getFamily() != null)
             throw new CustomException(ErrorCode.ALREADY_EXIST, "family");
 
-        // family 저장, elder 저장, user family update
         ImgEntity imgEntity = imgService.save(elderImgFile);
         FamilyEntity family = familyRepository.save(familyDto.toFamilyEntity());
         elderRepository.save(elderDto.toEntity(family, imgEntity));

@@ -34,7 +34,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE user SET delete_at = NOW(), social_id = null WHERE id = ?")
+@SQLDelete(sql = "UPDATE user SET delete_at = NOW(), social_id = null, img_id = null WHERE id = ?")
 @SQLRestriction("delete_at is null")
 public class UserEntity extends BasedEntity {
 
@@ -71,6 +71,9 @@ public class UserEntity extends BasedEntity {
     @Column
     private String relation;
 
+    @Column
+    private boolean isUpdate = false;
+
     @OneToOne(targetEntity = ImgEntity.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "img_id", nullable = true)
     private ImgEntity img;
@@ -90,10 +93,11 @@ public class UserEntity extends BasedEntity {
             this.relation = dto.getRelation();
         if(dto.getNumber() != null && !dto.getNumber().isEmpty())
             this.number = dto.getNumber();
+        isUpdate = true;
     }
 
-    public void update(ImgEntity img) { this.img = img; }
-    public void update(UpdateUserFamilyDto dto) { this.family = dto.getFamily(); this.isLeader = dto.isLeader(); this.relation=dto.getRelation(); this.role = UserRole.USER; }
+    public void update(ImgEntity img) { this.img = img; this.isUpdate= true; }
+    public void update(UpdateUserFamilyDto dto) { this.family = dto.getFamily(); this.isLeader = dto.isLeader(); this.relation=dto.getRelation(); this.role = UserRole.USER; this.isUpdate= true; }
     public void updateLeader(boolean a) {this.isLeader = a;}
 
 //    public boolean validate() {

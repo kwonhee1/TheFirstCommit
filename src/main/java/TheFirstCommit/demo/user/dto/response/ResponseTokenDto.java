@@ -24,7 +24,9 @@ public class ResponseTokenDto {
 
     public ResponseTokenDto(UserEntity userEntity) {
         this.userEntity = userEntity;
-        isFirst = false;
+        isFirst = !userEntity.isUpdate();
+        if(isFirst)
+            this.userDetailDto = ResponseUserDetailDto.of(userEntity);
     }
     public ResponseTokenDto(UserEntity userEntity, ResponseUserDetailDto userDetailDto) {
         this.userEntity = userEntity;

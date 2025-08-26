@@ -88,8 +88,9 @@ public class UserServiceImpl implements UserService {
             return;
         }
 
-        if(deleteUser)
+        if(deleteUser) {
             userRepository.delete(user);
+        }
     }
 
     private void changeLeader(UserEntity user, UserEntity nextLeader, FamilyEntity family) {

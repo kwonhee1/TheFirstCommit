@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,9 +54,9 @@ public class UserController {
         return ResponseEntity.ok().body(new SuccessResponse("success", MyPageDto.builder().paymentDto(paymentDto).userInfoDto(userInfoDto).build()));
     }
 
-    @DeleteMapping("/api/user/delete")
+    @PostMapping("/api/user/delete")
     public ResponseEntity deleteUser(@AuthenticationPrincipal UserEntity user, @RequestBody(required = false) Map<String, Long> request) {
-        userService.delete(user, request.get("nextLeaderId"), true);
+        userService.delete(user, request != null ? request.get("nextLeaderId"):null, true);
         return ResponseEntity.ok().body(new SuccessResponse("success", null));
     }
 

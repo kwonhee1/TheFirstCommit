@@ -55,6 +55,8 @@ public class ImgServiceIpfs implements ImgService {
     @Override
     @Transactional
     public ImgEntity save(MultipartFile file) {
+        if(file == null || file.isEmpty())
+            return null;
         String cid;
         try {
             NamedStreamable streamable = new NamedStreamable.ByteArrayWrapper(file.getBytes());
@@ -69,6 +71,8 @@ public class ImgServiceIpfs implements ImgService {
     @Override
     @Transactional
     public void update(ImgEntity old, MultipartFile file) {
+        if(file == null || file.isEmpty())
+            return;
         try {
             if(old.getCid() != null)
                 ipfs.pin.rm(io.ipfs.multihash.Multihash.fromBase58(old.getCid()));
@@ -92,6 +96,8 @@ public class ImgServiceIpfs implements ImgService {
     @Override
     @Transactional
     public void delete(ImgEntity img) {
+        if(img == null)
+            return;
         try {
             if(img.getCid() != null)
                 ipfs.pin.rm(io.ipfs.multihash.Multihash.fromBase58(img.getCid()));

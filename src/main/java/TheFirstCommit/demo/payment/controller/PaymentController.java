@@ -42,7 +42,7 @@ public class PaymentController {
         return ResponseEntity.ok().body(new SuccessResponse("success", cardService.getCardInfo(user)));
     }
 
-    @DeleteMapping("/api/payment/card")
+    @PostMapping("/api/payment/card/delete")
     public ResponseEntity deleteCard(@AuthenticationPrincipal UserEntity user, @RequestBody(required = false) Map<String, Long> request) {
         cardService.remove(user);
         userService.delete(user, request.get("nextLeaderId"), false);
